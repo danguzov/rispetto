@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+
+@source '../views/components/site';
+@source '../views/sections';
+@source '../views/pages';
+@source '../views/partials/site-head.blade.php';
+
+/* ITC Benguiat Std — dodaj .woff2 fajlove u public/fonts/benguiat/ (export iz Figme / font licence) */
+@font-face {
+    font-family: 'ITC Benguiat Std';
+    src: url('/fonts/benguiat/BenguiatStd-Book.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ITC Benguiat Std';
+    src: url('/fonts/benguiat/BenguiatStd-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'ITC Benguiat Std', Georgia, 'Times New Roman', Times, serif;
+
+    --color-rispetto-bg: #050505;
+    --color-rispetto-surface: #0a0a0a;
+    --color-rispetto-elevated: #111111;
+    --color-rispetto-border: #1f1f1f;
+    --color-rispetto-text: #ffffff;
+    --color-rispetto-muted: #a3a3a3;
+    --color-rispetto-accent: #00ff03;
+    --color-rispetto-accent-hover: #00d902;
+    --color-rispetto-on-accent: #050505;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-rispetto-bg font-sans text-rispetto-text antialiased;
+    }
+}
+
+@layer components {
+    .site-heading {
+        @apply font-display text-3xl font-bold tracking-tight text-rispetto-text sm:text-4xl lg:text-5xl;
+    }
+
+    .site-subheading {
+        @apply text-base leading-relaxed text-rispetto-muted sm:text-lg;
+    }
+
+    .site-eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.25em] text-rispetto-accent;
+    }
+
+    .site-btn-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-rispetto-accent px-6 py-3 text-sm font-bold text-rispetto-on-accent transition hover:bg-rispetto-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
+    }
+
+    .site-btn-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-rispetto-border bg-transparent px-6 py-3 text-sm font-semibold text-rispetto-text transition hover:border-rispetto-accent/50 hover:text-rispetto-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
+    }
+
+    .site-card {
+        @apply overflow-hidden rounded-2xl border border-rispetto-border bg-rispetto-elevated;
+    }
+
+    .site-panel {
+        @apply rounded-2xl border border-rispetto-border bg-rispetto-surface;
+    }
+
+    .catalog-tab {
+        @apply inline-flex min-h-12 min-w-[3rem] items-center justify-center rounded-lg bg-rispetto-elevated px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-rispetto-text transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent lg:justify-start lg:text-sm;
+    }
+
+    .catalog-tab[data-active='true'] {
+        @apply bg-rispetto-accent text-rispetto-on-accent;
+    }
+}

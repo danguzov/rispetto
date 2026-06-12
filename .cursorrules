@@ -1,0 +1,16 @@
+Kreiramo frontend za sajt restorana. Prati sledeća striktna pravila za CSS/Tailwind kako bi layout bio savršeno stabilan na 100% i 125% zoom-u i prošao Google Lighthouse audit:
+
+1. FONT-SIZE & MERE: 
+- Nikada nemoj koristiti fiksne piksele (px) za fontove, padding i marginu. 
+- Koristi isključivo relativne jedinice: `rem` za strukturu i razmake, a `rem` ili `em` za fontove (kako bi se elementi prirodno skalirali kada korisnik zumira browser na 125%).
+- Osnovni tekst (body) mora biti najmanje 1rem (16px) kako Google ne bi prijavljivao grešku "Text too small to read".
+
+2. KONTROLE I INPUTI:
+- Sva interaktivna polja (inputi, dugmići, linkovi u meniju) moraju imati minimalnu klikabilnu površinu od 48x48px (ekvivalent u rem-ovima) u skladu sa WCAG standardima.
+
+3. VELIČINE SLIKA I GOOGLE CLS:
+- Za svaku sliku (pice, ambijent, logo) UVEK eksplicitno definiši 'width' i 'height' atribute na samom HTML/Blade tagu ili kroz fiksni aspekt-ratio (npr. aspect-video, aspect-square u Tailwind-u). Ovo sprečava Layout Shift prilikom učitavanja.
+- Koristi moderni CSS za slike: `object-cover` uz jasno definisan kontejner, kako se slike hrane ne bi deformisale pri promeni rezolucije ili zooma.
+
+4. RESPONSIVENESS:
+- Koristi fluidan layout (flexbox i grid sa procentualnim ili fr kolonama) umesto fiksnih širina (koristi max-w-[jedinica] umesto w-[fiksno_px]).

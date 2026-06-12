@@ -1,0 +1,75 @@
+---
+description: Pravila za javni sajt restorana Rispetto (Blade, Tailwind, sekcije, slike)
+globs: resources/views/{pages,sections,components/site}/**/*,resources/css/site.css,resources/js/site.js,app/Http/Controllers/PageController.php,config/site.php,app/Support/SiteImage.php,app/View/Components/Site/**
+alwaysApply: false
+---
+
+# Rispetto — pravila za javni sajt
+
+## Struktura
+
+- **Layout:** `x-site.layout` — jedini layout za javne stranice
+- **Kontejner:** `x-site.container` — uvek za ograničenje širine sadržaja
+- **Sekcije:** `resources/views/sections/` — komponente koje se uključuju na stranicama
+- **Stranice:** `resources/views/pages/` — tanke šablone; logika u `PageController`
+- **Konfiguracija:** `config/site.php` — navigacija i redosled sekcija na početnoj
+
+## Širina i responzivnost
+
+- Sadržaj **nikad** ne ide full-width bez razloga — uvek `x-site.container` (`max-w-7xl` ili `narrow` → `max-w-4xl`)
+- Svaka sekcija mora biti responzivna: mobile-first, zatim `sm:`, `md:`, `lg:` breakpointi
+- Testirati na uskim ekranima (320px+) i tabletu; grid prelazi u jednu kolonu na mobilnom
+- Ne koristiti fiksne `px` širine za layout — samo Tailwind utility klase
+
+## Tailwind i stil (Figma dizajn)
+
+- **Figma:** vidi `config/design.php` za link i tokene
+- **Pozadina:** `#050505` → `bg-rispetto-bg`
+- **Akcent:** `#00FF03` → `text-rispetto-accent`, `bg-rispetto-accent` (tekst na zelenom: `text-rispetto-on-accent`)
+- **Naslovi:** ITC Benguiat Std → `font-display` (fajlovi u `public/fonts/benguiat/`)
+- **Tekst:** Outfit → `font-sans` (default body)
+- Koristiti **isključivo Tailwind klase** + utility klase iz `site.css` (`site-heading`, `site-btn-*`, `site-card`, `site-panel`)
+- Tamna tema — ne uvoditi svetle `bg-white` pozadine
+- Javni sajt koristi `site.css` + `site.js`, **ne** mešati sa Flux/auth stilovima
+- Tekst na sajtu je na **srpskom**
+
+## Ikone (SVG)
+
+- Placeholder krugovi imaju `data-icon-slot` (npr. `tradition`, `ingredients`, `service`)
+- SVG fajlovi idu u `resources/views/components/site/icons/{ime}.blade.php`
+- U `feature-card` uključi: `@includeWhen(View::exists('components.site.icons.'.$icon), 'components.site.icons.'.$icon)`
+
+## Sekcije na početnoj
+
+- Redosled sekcija definiše `config/site.php` → `home_sections`
+- Nova sekcija: kreiraj `resources/views/sections/ime.blade.php` i dodaj slug u config
+- Sekcija uvek koristi `x-site.section` + `x-site.container` unutra
+- Podatke za sekciju prosleđuj iz `PageController` preko `sectionData`
+
+## Slike — obavezna optimizacija
+
+- Uvek koristiti `<x-site.optimized-image>` — nikad gol `<img>` na sajtu
+- Hero slike: `priority="true"` (LCP); ostale lazy load (podrazumevano)
+- Uvek postaviti `alt`, `width`, `height` i `sizes` gde je moguće (sprečava CLS)
+- Statične slike sajta: `public/images/site/` — pokrenuti `npm run optimize:images` posle dodavanja
+- Slike iz admina (storage): putanja je relativna na `storage/` disk; `SiteImage` to rešava
+- Konvencija varijanti: `hero-640w.jpg`, `hero-1024w.jpg`, `hero.webp`, `hero-640w.webp`
+- Preferirati WebP; JPEG/PNG kao fallback kroz `<picture>`
+
+## Stranice
+
+| Ruta | View | Namena |
+|------|------|--------|
+| `/` | `pages.home` | Sekcije iz config-a |
+| `/jelovnik` | `pages.menu` | Kategorije + jela iz baze |
+| `/karta-pica` | `pages.drinks` | Kategorije + pića iz baze |
+| `/proslave` | `pages.celebrations` | Statički sadržaj |
+| `/o-nama` | `pages.about` | Statički sadržaj |
+
+## Šta izbegavati
+
+- Inline `style=""` atributi
+- Novi layout fajlovi bez razloga
+- Hardkodovana navigacija — uvek `config('site.navigation')`
+- Direktan `@php` blok sa business logikom u Blade-u — logika u kontroleru
+- Preveliki diff na auth/dashboard delu starter kit-a
