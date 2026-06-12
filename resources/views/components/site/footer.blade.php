@@ -2,7 +2,7 @@
     $contact = config('site.contact');
 @endphp
 
-<footer class="bg-rispetto-bg">
+<footer class="site-reveal bg-rispetto-bg" data-site-reveal>
     <x-site.container class="pt-14 pb-14 sm:pt-16 sm:pb-16">
         <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {{-- Kolona 1: brend --}}
@@ -61,23 +61,49 @@
             </div>
 
             {{-- Kolona 4: partneri --}}
+            @php
+                $partner = config('site.partner');
+                $partnerLogo = $partner['logo'];
+                $partnerLogoExists = file_exists(public_path($partnerLogo));
+                $partnerLogoIsSvg = str_ends_with(strtolower($partnerLogo), '.svg');
+            @endphp
             <div class="flex flex-col items-start gap-5">
                 <h2 class="text-sm font-bold uppercase tracking-wide text-rispetto-text">
                     Partneri sa:
                 </h2>
-                @if (file_exists(public_path(config('site.partner.logo'))))
-                    <x-site.optimized-image
-                        :src="config('site.partner.logo')"
-                        :alt="config('site.partner.name')"
-                        class="h-14 w-auto max-w-[11rem] object-contain object-left"
-                        :width="200"
-                        :height="80"
-                        sizes="200px"
-                    />
+                @if ($partnerLogoExists)
+                    <a
+                        href="{{ $partner['url'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex h-14 max-w-[11rem] items-center transition opacity-90 hover:opacity-100"
+                        aria-label="{{ $partner['name'] }}"
+                    >
+                        @if ($partnerLogoIsSvg)
+                            <img
+                                src="{{ asset($partnerLogo) }}"
+                                alt="{{ $partner['name'] }}"
+                                class="h-14 w-auto max-w-[11rem] object-contain object-left"
+                                width="200"
+                                height="80"
+                            />
+                        @else
+                            <x-site.optimized-image
+                                :src="$partnerLogo"
+                                :alt="$partner['name']"
+                                class="h-14 w-auto max-w-[11rem] object-contain object-left"
+                                :width="200"
+                                :height="80"
+                                sizes="200px"
+                            />
+                        @endif
+                    </a>
                 @else
-                    <div class="flex h-14 max-w-[11rem] items-center gap-2">
-                        <span class="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-rispetto-accent text-lg font-bold text-rispetto-on-accent" aria-hidden="true">A</span>
-                        <span class="font-display text-xl font-bold text-rispetto-text">{{ config('site.partner.name') }}</span>
+                    <div class="flex h-14 w-full max-w-[11rem] items-center justify-center rounded-xl border border-dashed border-rispetto-border/80 px-4">
+                        <span class="text-center text-xs leading-snug text-rispetto-muted">
+                            Logo partnera<br>
+                            <span class="text-rispetto-accent">partner-alideda.svg</span>
+                        </span>
                     </div>
                 @endif
             </div>

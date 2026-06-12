@@ -5,6 +5,8 @@ return [
     'phone' => '063/72-88-155',
     'phone_href' => 'tel:+381637288155',
 
+    'brand_logo' => 'images/site/rispetto-logo.svg',
+
     'contact' => [
         'name' => 'Rispetto Ristorante',
         'email' => 'rispettoristorante@office.com',
@@ -31,7 +33,8 @@ return [
 
     'partner' => [
         'name' => 'Alideda',
-        'logo' => 'images/site/partner-alideda.png',
+        'logo' => 'images/site/partner-alideda.svg',
+        'url' => 'https://alideda.rs',
     ],
 
     'credits' => [
@@ -51,7 +54,7 @@ return [
             ['label' => 'Proslave', 'route' => 'celebrations'],
         ],
         'right' => [
-            ['label' => 'Dostava', 'url' => '#dostava'],
+            ['label' => 'Dostava', 'route' => 'delivery'],
             ['label' => 'O nama', 'route' => 'about'],
         ],
     ],
@@ -65,7 +68,7 @@ return [
         ['label' => 'Jelovnik', 'route' => 'menu'],
         ['label' => 'Karta pića', 'route' => 'drinks'],
         ['label' => 'Proslave', 'route' => 'celebrations'],
-        ['label' => 'Dostava', 'url' => '#dostava'],
+        ['label' => 'Dostava', 'route' => 'delivery'],
         ['label' => 'O nama', 'route' => 'about'],
     ],
 
@@ -132,14 +135,13 @@ return [
     ],
 
     'home_sections' => [
-        'hero',
-        'features',
-        'about-preview',
-        'featured-menu',
-        'drinks-preview',
-        'celebrations-preview',
-        'testimonials',
-        'visit',
+        'home.hero',
+        'home.features',
+        'shared.featured-menu',
+        'home.drinks-preview',
+        'home.celebrations-preview',
+        'shared.testimonials',
+        'shared.visit',
     ],
 
 ];

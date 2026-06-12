@@ -14,7 +14,7 @@ class PageController extends Controller
     {
         return view('pages.home', [
             'sectionData' => [
-                'featured-menu' => [
+                'shared.featured-menu' => [
                     'items' => MenuItem::query()
                         ->where('is_active', true)
                         ->where('featured', true)
@@ -67,6 +67,19 @@ class PageController extends Controller
     public function celebrations(): View
     {
         return view('pages.celebrations');
+    }
+
+    public function delivery(): View
+    {
+        $featuredMenuItems = MenuItem::query()
+            ->where('is_active', true)
+            ->where('featured', true)
+            ->with('category')
+            ->orderBy('sort_order')
+            ->limit(4)
+            ->get();
+
+        return view('pages.delivery', compact('featuredMenuItems'));
     }
 
     public function about(): View

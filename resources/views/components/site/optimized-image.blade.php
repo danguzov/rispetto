@@ -3,7 +3,7 @@
     $hasSrcset = filled($srcset);
 @endphp
 
-<picture>
+<picture class="block size-full">
     @if ($webp = $webpSrc())
         <source type="image/webp" srcset="{{ $webp }}" sizes="{{ $sizes }}">
     @endif

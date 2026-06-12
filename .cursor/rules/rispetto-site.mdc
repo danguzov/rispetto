@@ -10,7 +10,8 @@ alwaysApply: false
 
 - **Layout:** `x-site.layout` — jedini layout za javne stranice
 - **Kontejner:** `x-site.container` — uvek za ograničenje širine sadržaja
-- **Sekcije:** `resources/views/sections/` — komponente koje se uključuju na stranicama
+- **Sekcije:** `resources/views/sections/` — podfolderi po stranicama + `shared/` za deljene blokove
+- **Redosled na početnoj:** `config/site.php` → `home_sections` (npr. `home.hero`, `shared.visit`)
 - **Stranice:** `resources/views/pages/` — tanke šablone; logika u `PageController`
 - **Konfiguracija:** `config/site.php` — navigacija i redosled sekcija na početnoj
 
@@ -42,7 +43,8 @@ alwaysApply: false
 ## Sekcije na početnoj
 
 - Redosled sekcija definiše `config/site.php` → `home_sections`
-- Nova sekcija: kreiraj `resources/views/sections/ime.blade.php` i dodaj slug u config
+- Nova sekcija: kreiraj fajl u odgovarajućem podfolderu (npr. `sections/about/story.blade.php`) i uključi je u page template
+- Sekcija na početnoj: dodaj putanju u `config/site.php` → `home_sections`
 - Sekcija uvek koristi `x-site.section` + `x-site.container` unutra
 - Podatke za sekciju prosleđuj iz `PageController` preko `sectionData`
 

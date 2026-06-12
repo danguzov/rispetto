@@ -83,4 +83,55 @@
     .catalog-tab[data-active='true'] {
         @apply bg-rispetto-accent text-rispetto-on-accent;
     }
+
+    .mobile-nav {
+        @apply pointer-events-none invisible;
+    }
+
+    .mobile-nav[data-open='true'] {
+        @apply pointer-events-auto visible;
+    }
+
+    .mobile-nav__backdrop {
+        @apply opacity-0 transition-opacity duration-300 ease-out;
+    }
+
+    .mobile-nav[data-open='true'] .mobile-nav__backdrop {
+        @apply opacity-100;
+    }
+
+    .mobile-nav__panel {
+        @apply h-dvh translate-x-full transition-transform duration-300 ease-out;
+    }
+
+    .mobile-nav[data-open='true'] .mobile-nav__panel {
+        @apply translate-x-0;
+    }
+
+    .mobile-nav__link {
+        @apply font-display;
+    }
+
+    .mobile-nav__link[aria-current='page'] {
+        @apply bg-rispetto-elevated text-rispetto-accent;
+    }
+
+    .site-reveal {
+        @apply translate-y-10 opacity-0 blur-sm;
+        transition:
+            opacity 1800ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 1800ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 1800ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .site-reveal[data-revealed='true'] {
+        @apply translate-y-0 opacity-100 blur-none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-reveal {
+        @apply translate-y-0 opacity-100 blur-none;
+        transition: none;
+    }
 }

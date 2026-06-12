@@ -4,22 +4,22 @@
 @endphp
 
 <x-site.section class="border-b border-rispetto-border !pb-16 !pt-0 sm:!pb-20">
-    <x-site.container>
-        {{-- Naslov centriran --}}
-        <div class="mx-auto mb-10 max-w-2xl text-center sm:mb-12 lg:mb-14">
+    {{-- Mapa + kartica (tekst desno, kartica levo malo uvučena) --}}
+    <x-site.container class="relative">
+        {{-- Naslov — desno poravnat --}}
+        <div class="mb-10 ml-auto max-w-2xl text-right sm:mb-12 lg:mb-14 lg:max-w-xl">
             <h2 class="font-display text-3xl font-bold leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
                 Vaše novo
                 <em class="font-display font-bold italic text-rispetto-accent">omiljeno mesto</em>
             </h2>
-            <p class="site-subheading mx-auto mt-4">
+            <p class="site-subheading mt-4 lg:ml-auto">
                 Napravite pauzu od svega i prepustite se ukusima koji vraćaju osmeh na lice. Vaš savršen beg od svakodnevice čeka vas svakog dana u nedelji.
             </p>
         </div>
 
-        {{-- Kartica + mapa (u normalnom toku — bez absolute) --}}
-        <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-6 xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] xl:gap-8">
-            {{-- Radno vreme --}}
-            <div class="relative z-10 w-full max-w-md lg:max-w-none lg:-mr-10 xl:-mr-14">
+        <div class="relative w-full overflow-visible">
+            {{-- Radno vreme — levo, malo uvučena, preklapa mapu od sredine naviše --}}
+            <div class="relative z-10 mb-6 w-full max-w-md max-lg:-mb-12 max-lg:ml-6 sm:max-lg:ml-8 lg:absolute lg:bottom-[12.5rem] lg:left-8 lg:mb-0 lg:max-w-[20rem] xl:left-12 xl:max-w-[22rem]">
                 <div class="rounded-2xl border border-rispetto-border bg-rispetto-elevated p-6 shadow-xl sm:p-8">
                     <h3 class="font-display text-2xl font-bold text-rispetto-text">Radno vreme</h3>
 
@@ -67,7 +67,7 @@
             </div>
 
             {{-- Mapa --}}
-            <div class="h-[20rem] overflow-hidden rounded-3xl border border-rispetto-border bg-rispetto-surface sm:h-[26rem] lg:h-[32rem] xl:h-[36rem]">
+            <div class="-mx-4 h-[25rem] max-h-[25rem] w-[calc(100%+2rem)] overflow-hidden rounded-none border-y border-rispetto-border bg-rispetto-surface sm:-mx-6 sm:w-[calc(100%+3rem)] lg:mx-0 lg:w-full lg:rounded-3xl lg:border">
                 <iframe
                     title="Lokacija restorana Rispetto"
                     src="{{ $contact['maps_embed_url'] }}"

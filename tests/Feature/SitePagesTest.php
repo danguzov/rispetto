@@ -11,5 +11,6 @@ it('renders public site pages', function (string $uri) {
     '/jelovnik',
     '/karta-pica',
     '/proslave',
+    '/dostava',
     '/o-nama',
 ]);

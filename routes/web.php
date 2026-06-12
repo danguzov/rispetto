@@ -8,6 +8,7 @@ Route::controller(PageController::class)->group(function (): void {
     Route::get('/jelovnik', 'menu')->name('menu');
     Route::get('/karta-pica', 'drinks')->name('drinks');
     Route::get('/proslave', 'celebrations')->name('celebrations');
+    Route::get('/dostava', 'delivery')->name('delivery');
     Route::get('/o-nama', 'about')->name('about');
 });
 

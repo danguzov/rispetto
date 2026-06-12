@@ -194,7 +194,7 @@ belongsToMany(Drink::class);
 | Proslave | `/proslave` |
 | O nama | `/o-nama` |
 
-- **Sekcije:** `resources/views/sections/` — redosled na početnoj u `config/site.php`
+- **Sekcije:** `resources/views/sections/` — po stranicama (`home/`, `about/`, …) i zajedničke (`shared/`)
 - **Layout:** `x-site.layout`, kontejner `x-site.container` (`max-w-7xl`)
 - **Slike:** `<x-site.optimized-image>` + `npm run optimize:images` za statične slike u `public/images/site/`
 - **Dizajn (Figma):** pozadina `#050505`, akcent `#00FF03`, fontovi ITC Benguiat Std + Outfit — `config/design.php`

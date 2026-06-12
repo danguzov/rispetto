@@ -27,7 +27,7 @@
 
             {{-- Desna kolona --}}
             <div class="relative order-1 mx-auto w-full max-w-md lg:order-2 lg:mx-0 lg:max-w-none">
-                <div class="relative aspect-[4/5] overflow-hidden rounded-3xl border border-rispetto-border sm:aspect-[3/4]">
+                <div class="relative aspect-[4/5] overflow-hidden rounded-3xl border border-rispetto-border sm:aspect-[3/4] lg:max-h-[35.375rem] lg:w-full">
                     @if (file_exists(public_path('images/site/hero.jpg')))
                         <x-site.optimized-image
                             src="images/site/hero.jpg"
