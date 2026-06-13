@@ -2,10 +2,10 @@
 $image = 'images/site/proslave-radni-dani.jpg';
 @endphp
 
-<x-site.section class="!py-12 sm:!py-16 lg:!py-20">
+<x-site.section>
     <x-site.container>
         <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-            <div class="overflow-hidden rounded-3xl border border-rispetto-border bg-rispetto-surface lg:max-h-[35rem] lg:w-full">
+            <div class="order-2 overflow-hidden rounded-3xl border border-rispetto-border bg-rispetto-surface lg:order-1 lg:max-h-[35rem] lg:w-full">
                 <div class="aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] lg:max-h-[35rem] lg:w-full">
                     @if (file_exists(public_path($image)))
                     <x-site.optimized-image
@@ -26,12 +26,12 @@ $image = 'images/site/proslave-radni-dani.jpg';
                 </div>
             </div>
 
-            <div class="space-y-5 text-center lg:text-left">
-                <h2 class="font-display text-3xl font-bold leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
+            <div class="order-1 space-y-5 text-center lg:order-2 lg:text-left">
+                <h2 class="font-display text-3xl font-medium leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
                     Manje i srednje proslave
                 </h2>
 
-                <p class="font-sans text-3xl font-medium italic leading-tight text-rispetto-accent sm:text-4xl lg:text-5xl">
+                <p class="font-display text-3xl font-medium italic leading-tight text-rispetto-accent sm:text-4xl lg:text-5xl">
                     radnim danima
                 </p>
 

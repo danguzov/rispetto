@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $category_id
  * @property string $name
  * @property string|null $description
+ * @property string|null $weight
  * @property string $price
  * @property string|null $image
  * @property string|null $contents
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
     'category_id',
     'name',
     'description',
+    'weight',
     'price',
     'image',
     'contents',

@@ -1,4 +1,4 @@
-<x-site.layout title="Dostava" description="Dostava hrane i lično preuzimanje u restoranu Rispetto.">
+<x-site.layout>
     @include('sections.delivery.hero')
     @include('sections.delivery.options')
     @include('sections.shared.featured-menu', ['items' => $featuredMenuItems])

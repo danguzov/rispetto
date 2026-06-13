@@ -33,12 +33,20 @@
             {{ $item->name }}
         </h3>
 
-        <p class="line-clamp-3 flex-1 text-sm leading-relaxed text-rispetto-muted">
-            {{ $item->description }}
-        </p>
+        <x-site.item-weight :weight="$item->weight" />
 
-        <p class="pt-1 text-base font-bold text-rispetto-accent sm:text-lg">
-            {{ number_format((float) $item->price, 0, ',', '.') }}
-        </p>
+        @if ($item->description)
+            <p class="line-clamp-3 flex-1 text-sm leading-relaxed text-rispetto-muted">
+                {{ $item->description }}
+            </p>
+        @endif
+
+        @if ($item->hasPriceVariants())
+            <x-site.menu-pricing :item="$item" compact />
+        @elseif ($item->displayPrice())
+            <p class="pt-1 text-base font-bold text-rispetto-accent sm:text-lg">
+                {{ $item->displayPrice() }} RSD
+            </p>
+        @endif
     </div>
 </article>

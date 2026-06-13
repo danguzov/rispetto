@@ -1,0 +1,30 @@
+{
+    "name": "Rispetto — italijanski restoran",
+    "short_name": "Rispetto",
+    "description": "Restoran Rispetto u Batajnici — jelovnik, karta pića, proslave i dostava.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#050505",
+    "lang": "sr",
+    "icons": [
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

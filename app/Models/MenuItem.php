@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use App\Concerns\HasPriceVariants;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @property int $id
  * @property int $category_id
  * @property string $name
- * @property string $description
- * @property string $price
+ * @property string|null $description
+ * @property string|null $weight
+ * @property string|null $price
+ * @property list<array{label: string, price: float|string}>|null $price_variants
  * @property string|null $image
  * @property bool $featured
  * @property string|null $contents
@@ -26,7 +30,9 @@ use Illuminate\Support\Carbon;
     'category_id',
     'name',
     'description',
+    'weight',
     'price',
+    'price_variants',
     'image',
     'featured',
     'contents',
@@ -35,6 +41,8 @@ use Illuminate\Support\Carbon;
 ])]
 class MenuItem extends Model
 {
+    use HasPriceVariants;
+
     /**
      * @return array<string, string>
      */
@@ -42,10 +50,28 @@ class MenuItem extends Model
     {
         return [
             'price' => 'decimal:2',
+            'price_variants' => 'array',
             'featured' => 'boolean',
             'sort_order' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (MenuItem $item): void {
+            if ($item->hasPriceVariants()) {
+                $item->price_variants = $item->normalizedPriceVariants();
+            } else {
+                $item->price_variants = null;
+            }
+
+            if (! $item->hasPriceVariants() && $item->price === null) {
+                throw ValidationException::withMessages([
+                    'price' => 'Unesite cenu ili dodajte bar jednu veličinu pice.',
+                ]);
+            }
+        });
     }
 
     /**

@@ -1,12 +1,19 @@
 @props([
     'title' => null,
     'description' => null,
+    'ogImage' => null,
+    'robots' => null,
 ])
 
 <!DOCTYPE html>
 <html lang="sr">
     <head>
-        @include('partials.site-head', ['title' => $title, 'description' => $description])
+        @include('partials.site-head', [
+            'title' => $title,
+            'description' => $description,
+            'ogImage' => $ogImage,
+            'robots' => $robots,
+        ])
     </head>
     <body class="min-h-screen flex flex-col">
         <x-site.header />

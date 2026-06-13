@@ -8,7 +8,7 @@
     @if ($reveal) data-site-reveal @endif
     {{ $attributes->class([
         'site-reveal' => $reveal,
-        'py-12 sm:py-16 lg:py-20',
+        'site-section-padding',
         'bg-rispetto-bg' => $variant === 'default',
         'bg-rispetto-surface' => $variant === 'muted',
         'bg-rispetto-elevated' => $variant === 'elevated',

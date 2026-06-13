@@ -33,7 +33,11 @@ class MenuItemsTable
                 TextColumn::make('price')
                     ->label('Cena')
                     ->money('RSD')
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('Varijante')
+                    ->description(fn ($record) => $record->hasPriceVariants()
+                        ? collect($record->normalizedPriceVariants())->count().' var.'
+                        : null),
                 IconColumn::make('featured')
                     ->label('Istaknuto')
                     ->boolean(),

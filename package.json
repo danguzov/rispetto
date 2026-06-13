@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "optimize:images": "node scripts/optimize-site-images.mjs"
+        "optimize:images": "node scripts/optimize-site-images.mjs",
+        "optimize:seo-assets": "node scripts/generate-seo-assets.mjs"
     },
     "dependencies": {
         "@laravel/passkeys": "^0.2.0",

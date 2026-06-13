@@ -1,4 +1,4 @@
-<x-site.layout title="Proslave" description="Organizujte proslave i događaje u restoranu Rispetto.">
+<x-site.layout>
     @include('sections.celebrations.hero')
     @include('sections.celebrations.weekdays')
     @include('sections.celebrations.weekends')

@@ -21,9 +21,13 @@
     </div>
 
     <div class="min-w-0 flex-1">
-        <div class="flex items-start justify-between gap-4">
-            <h3 class="font-display text-lg font-bold text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
-            <span class="shrink-0 text-lg font-semibold text-rispetto-accent sm:text-xl">{{ number_format((float) $item->price, 0, ',', '.') }}</span>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div class="min-w-0 space-y-1">
+                <h3 class="font-display text-lg font-bold text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
+                <x-site.item-weight :weight="$item->weight" />
+            </div>
+
+            <x-site.menu-pricing :item="$item" class="shrink-0" />
         </div>
 
         @if ($item->description || $item->contents)

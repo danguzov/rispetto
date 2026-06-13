@@ -13,7 +13,6 @@
     <div
         class="mb-5 flex size-12 items-center justify-center rounded-full bg-rispetto-bg text-rispetto-accent ring-1 ring-rispetto-border"
         data-icon-slot="{{ $icon }}"
-        aria-hidden="true"
     >
         @includeWhen(View::exists($iconSvg), $iconSvg)
 
@@ -21,7 +20,7 @@
             @if (file_exists(public_path($iconFile)))
                 <img
                     src="{{ asset($iconFile) }}"
-                    alt=""
+                    alt="Ikona: {{ $title }}"
                     class="size-6 object-contain"
                     width="24"
                     height="24"

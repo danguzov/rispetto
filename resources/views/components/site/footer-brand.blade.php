@@ -6,7 +6,7 @@
     @if (file_exists(public_path($logo)))
         <img
             src="{{ asset($logo) }}"
-            alt="Rispetto — Italian Restaurant"
+            alt="Rispetto — italijanski restoran"
             class="h-10 w-auto sm:h-11"
             width="213"
             height="46"

@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/css/site.css',
                 'resources/js/app.js',
                 'resources/js/site.js',
+                'resources/js/defer.js',
                 'resources/js/passkeys.js',
             ],
             refresh: true,

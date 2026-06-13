@@ -1,29 +1,28 @@
-<x-site.layout title="Karta pića" description="Karta pića restorana Rispetto.">
+<x-site.layout>
     @include('sections.shared.page-hero', [
-
-    'title' => 'Karta pića',
-    'description' => 'Od domaćih vina do osvežavajućih napitaka — pronađite savršen par uz jelo.',
+        'title' => 'Karta pića',
+        'description' => 'Od domaćih vina do osvežavajućih napitaka — pronađite savršen par uz jelo.',
     ])
 
-    <x-site.section class="!pt-0">
+    <x-site.section>
         <x-site.container>
             @php
-            $catalogEntries = $categories
-            ->filter(fn ($category) => $category->drinks->isNotEmpty())
-            ->map(fn ($category) => [
-            'slug' => $category->slug,
-            'name' => $category->name,
-            'items' => $category->drinks,
-            ])
-            ->values();
+                $catalogEntries = $categories
+                    ->filter(fn ($category) => $category->drinks->isNotEmpty())
+                    ->map(fn ($category) => [
+                        'slug' => $category->slug,
+                        'name' => $category->name,
+                        'items' => $category->drinks,
+                    ])
+                    ->values();
 
-            if ($uncategorizedDrinks->isNotEmpty()) {
-            $catalogEntries->push([
-            'slug' => 'ostala-pica',
-            'name' => 'Ostala pića',
-            'items' => $uncategorizedDrinks,
-            ]);
-            }
+                if ($uncategorizedDrinks->isNotEmpty()) {
+                    $catalogEntries->push([
+                        'slug' => 'ostala-pica',
+                        'name' => 'Ostala pića',
+                        'items' => $uncategorizedDrinks,
+                    ]);
+                }
             @endphp
 
             <x-site.category-catalog

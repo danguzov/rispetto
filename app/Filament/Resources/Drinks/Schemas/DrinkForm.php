@@ -34,7 +34,13 @@ class DrinkForm
                 Textarea::make('description')
                     ->label('Opis')
                     ->rows(4)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->helperText('Opciono.'),
+                TextInput::make('weight')
+                    ->label('Gramaža / zapremina')
+                    ->placeholder('npr. 0,33 l')
+                    ->maxLength(50)
+                    ->helperText('Opciono — prikazuje se ispod naziva pića.'),
                 TextInput::make('price')
                     ->label('Cena')
                     ->required()

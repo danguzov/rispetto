@@ -4,6 +4,7 @@ namespace App\Filament\Resources\MenuItems\Schemas;
 
 use App\Enums\ProductType;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -34,16 +35,45 @@ class MenuItemForm
                     ->maxLength(255),
                 Textarea::make('description')
                     ->label('Opis')
-                    ->required()
                     ->rows(4)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->helperText('Opciono.'),
+                TextInput::make('weight')
+                    ->label('Gramaža')
+                    ->placeholder('npr. 350 g')
+                    ->maxLength(50)
+                    ->helperText('Opciono — prikazuje se ispod naziva.'),
                 TextInput::make('price')
                     ->label('Cena')
-                    ->required()
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
-                    ->suffix('RSD'),
+                    ->suffix('RSD')
+                    ->helperText('Za obična jela. Za pice ostavite prazno i unesite veličine ispod.'),
+                Repeater::make('price_variants')
+                    ->label('Veličine pice (opciono)')
+                    ->schema([
+                        TextInput::make('label')
+                            ->label('Veličina')
+                            ->required()
+                            ->placeholder('25 cm')
+                            ->maxLength(50),
+                        TextInput::make('price')
+                            ->label('Cena')
+                            ->required()
+                            ->numeric()
+                            ->minValue(0)
+                            ->step(0.01)
+                            ->suffix('RSD'),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->defaultItems(0)
+                    ->addActionLabel('Dodaj veličinu')
+                    ->reorderable()
+                    ->collapsible()
+                    ->collapsed()
+                    ->helperText('Samo za pice: npr. 25 cm, 35 cm, 50 cm — jedna slika i naziv, više cena na sajtu.'),
                 FileUpload::make('image')
                     ->label('Slika')
                     ->image()

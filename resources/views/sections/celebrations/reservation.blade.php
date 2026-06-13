@@ -7,20 +7,19 @@ $iconImage = 'images/site/proslave-rezervacija-icon.png';
 }
 @endphp
 
-<x-site.section class="!py-12 sm:!py-16 lg:!py-20">
-    <x-site.container narrow>
+<x-site.section>
+    <x-site.container>
         <div class="rounded-3xl border border-rispetto-border bg-rispetto-elevated px-6 py-10 text-center sm:px-10 sm:py-12 lg:px-14 lg:py-14">
             <div
                 class="mx-auto mb-6 flex size-10 items-center justify-center text-rispetto-accent sm:mb-8 lg:size-12"
-                data-icon-slot="calendar-heart"
-                aria-hidden="true">
+                data-icon-slot="calendar-heart">
                 @includeWhen(View::exists($iconSvg), $iconSvg)
 
                 @unless (View::exists($iconSvg))
                 @if (file_exists(public_path($iconImage)))
                 <img
                     src="{{ asset($iconImage) }}"
-                    alt=""
+                    alt="Ikona za rezervaciju stola"
                     class="size-10 object-contain lg:size-12"
                     width="48"
                     height="48" />
@@ -32,9 +31,9 @@ $iconImage = 'images/site/proslave-rezervacija-icon.png';
                 @endunless
             </div>
 
-            <h2 class="font-display text-3xl font-bold leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
+            <h2 class="font-display text-3xl font-medium leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
                 Rezervišite vaš
-                <em class="font-display font-bold italic text-rispetto-accent">sto</em>
+                <em class="font-display font-medium italic text-rispetto-accent">sto</em>
             </h2>
 
             <p class="site-subheading mx-auto mt-4 max-w-lg sm:mt-5">

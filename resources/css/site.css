@@ -76,12 +76,118 @@
         @apply rounded-2xl border border-rispetto-border bg-rispetto-surface;
     }
 
+    /* Jedinstven vertikalni razmak sekcija: lg = 10.25rem (164px), manji breakpointi proporcionalno */
+    .site-section-padding {
+        @apply py-12 sm:py-16 md:py-[6.5rem] lg:py-[10.25rem];
+    }
+
+    /* Hero — Google recenzija kartica: uža = viša (više wrap-a + veći py na manjim ekranima) */
+    .hero-testimonial-card {
+        @apply relative z-10 mx-auto -mt-16 w-[calc(100%-2rem)] max-w-[29.375rem] rounded-2xl border border-rispetto-border bg-rispetto-elevated/95 px-5 py-6 shadow-2xl backdrop-blur-sm;
+        @apply sm:absolute sm:bottom-6 sm:left-0 sm:mx-0 sm:w-auto sm:max-w-[85%] sm:-translate-x-4 sm:px-5 sm:py-6;
+        @apply md:max-w-[75%] md:py-6;
+        @apply lg:max-w-[29.375rem] lg:-translate-x-8 lg:px-6 lg:py-5;
+    }
+
+    /* Dostava hero — tanjiri u redu, srednji niže, spora rotacija */
+    .delivery-hero-plates {
+        @apply mx-auto flex w-full max-w-[28rem] items-start justify-center gap-3 sm:max-w-[32rem] sm:gap-5 lg:max-w-[36rem] lg:gap-6;
+    }
+
+    .delivery-hero-plate-slot {
+        @apply shrink-0;
+    }
+
+    .delivery-hero-plate-slot--center {
+        @apply translate-y-4 sm:translate-y-5 lg:translate-y-6;
+    }
+
+    .delivery-hero-plate {
+        @apply size-[8.5rem] overflow-hidden rounded-full border-4 border-rispetto-bg bg-rispetto-surface shadow-xl sm:size-[10rem] lg:size-[11rem];
+    }
+
+    .delivery-hero-plate-slot--center .delivery-hero-plate {
+        @apply size-[9.5rem] sm:size-[11rem] lg:size-[12.5rem];
+    }
+
+    .delivery-hero-plate__spin {
+        @apply size-full;
+        animation: delivery-plate-spin 32s linear infinite;
+        transform-origin: center center;
+        will-change: transform;
+    }
+
+    .delivery-hero-plate-slot:nth-child(odd) .delivery-hero-plate__spin {
+        animation-direction: reverse;
+    }
+
+    /* Dostava — kartice opcija (slika + tekst unutar sivog panela) */
+    .delivery-option-card {
+        @apply flex h-full flex-col rounded-3xl bg-rispetto-elevated p-6 sm:p-8 lg:p-10;
+    }
+
+    .delivery-option-card__media {
+        @apply aspect-[16/10] overflow-hidden rounded-2xl bg-rispetto-surface;
+    }
+
+    .delivery-option-card__body {
+        @apply flex flex-1 flex-col pt-6 sm:pt-8;
+    }
+
+    .delivery-option-card__cta {
+        @apply mt-8 inline-flex min-h-12 w-fit items-center gap-2.5 rounded-full border border-rispetto-accent px-8 py-3.5 text-xs font-bold uppercase tracking-[0.2em] text-rispetto-accent transition hover:bg-rispetto-accent hover:text-rispetto-on-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
+    }
+
     .catalog-tab {
         @apply inline-flex min-h-12 min-w-[3rem] items-center justify-center rounded-lg bg-rispetto-elevated px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-rispetto-text transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent lg:justify-start lg:text-sm;
     }
 
     .catalog-tab[data-active='true'] {
         @apply bg-rispetto-accent text-rispetto-on-accent;
+    }
+
+    .category-catalog__dropdown {
+        @apply relative;
+    }
+
+    .category-catalog__trigger {
+        @apply flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border border-rispetto-border bg-rispetto-elevated px-5 py-3.5 text-left text-sm font-semibold uppercase tracking-wide text-rispetto-text transition hover:border-rispetto-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
+    }
+
+    .category-catalog__chevron {
+        @apply text-rispetto-accent transition-transform duration-200 ease-out;
+    }
+
+    .category-catalog__dropdown[data-open='true'] .category-catalog__chevron {
+        @apply rotate-180;
+    }
+
+    .category-catalog__menu {
+        @apply absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 max-h-[min(20rem,60dvh)] overflow-y-auto rounded-2xl border border-rispetto-border bg-rispetto-elevated p-2 shadow-2xl;
+    }
+
+    .category-catalog__option {
+        @apply justify-start rounded-xl px-4 py-3.5 text-left;
+    }
+
+    .menu-price-variants {
+        @apply flex flex-wrap items-end justify-start gap-2 sm:justify-end sm:gap-3;
+    }
+
+    .menu-price-variants--compact {
+        @apply justify-start sm:justify-start;
+    }
+
+    .menu-price-variants__row {
+        @apply inline-flex min-w-[4.5rem] flex-col items-end gap-0.5 rounded-xl border border-rispetto-border bg-rispetto-surface px-3 py-2 text-sm sm:min-w-[5rem] sm:text-base;
+    }
+
+    .menu-price-variants__label {
+        @apply text-xs font-medium uppercase tracking-wide text-rispetto-muted sm:text-sm sm:normal-case sm:tracking-normal;
+    }
+
+    .menu-price-variants__price {
+        @apply shrink-0 font-semibold leading-none text-rispetto-accent tabular-nums;
     }
 
     .mobile-nav {
@@ -129,9 +235,23 @@
     }
 }
 
+@keyframes delivery-plate-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .site-reveal {
         @apply translate-y-0 opacity-100 blur-none;
         transition: none;
+    }
+
+    .delivery-hero-plate__spin {
+        animation: none;
     }
 }

@@ -1,4 +1,4 @@
-<x-site.layout title="O nama" description="Upoznajte restoran Rispetto — našu priču, vrednosti i tim.">
+<x-site.layout>
     @include('sections.about.hero')
     @include('sections.about.story')
     @include('sections.shared.testimonials')

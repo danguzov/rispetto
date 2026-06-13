@@ -4,7 +4,7 @@
     'description' => null,
 ])
 
-<x-site.section variant="hero" class="!py-12 sm:!py-16">
+<x-site.section variant="hero">
     <x-site.container narrow class="relative text-center">
         @if ($eyebrow)
             <p class="site-eyebrow mb-3">{{ $eyebrow }}</p>

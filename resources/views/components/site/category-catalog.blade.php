@@ -7,6 +7,7 @@
 @php
     /** @var \Illuminate\Support\Collection<int, array{slug: string, name: string, items: \Illuminate\Support\Collection}> $entries */
     $hasEntries = $entries->isNotEmpty();
+    $firstEntry = $entries->first();
 @endphp
 
 @if ($hasEntries)
@@ -19,14 +20,53 @@
                 class="lg:sticky lg:top-24 lg:self-start"
                 aria-label="Kategorije"
             >
+                {{-- Mobilni / tablet: dropdown --}}
+                <div class="category-catalog__dropdown lg:hidden" data-category-dropdown>
+                    <button
+                        type="button"
+                        class="category-catalog__trigger"
+                        data-category-dropdown-toggle
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
+                    >
+                        <span data-category-dropdown-label>{{ $firstEntry['name'] }}</span>
+                        <svg class="category-catalog__chevron size-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+
+                    <ul
+                        class="category-catalog__menu"
+                        data-category-dropdown-menu
+                        role="listbox"
+                        hidden
+                    >
+                        @foreach ($entries as $index => $entry)
+                            <li role="presentation">
+                                <button
+                                    type="button"
+                                    class="category-catalog__option catalog-tab w-full"
+                                    role="option"
+                                    data-category-tab="{{ $entry['slug'] }}"
+                                    data-active="{{ $index === 0 ? 'true' : 'false' }}"
+                                    aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
+                                >
+                                    {{ $entry['name'] }}
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                {{-- Desktop: vertikalni tabovi --}}
                 <div
-                    class="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
+                    class="hidden gap-2 lg:flex lg:flex-col"
                     role="tablist"
                 >
                     @foreach ($entries as $index => $entry)
                         <button
                             type="button"
-                            class="catalog-tab shrink-0 lg:w-full"
+                            class="catalog-tab w-full"
                             role="tab"
                             id="catalog-tab-{{ $entry['slug'] }}"
                             data-category-tab="{{ $entry['slug'] }}"

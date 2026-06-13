@@ -2,6 +2,60 @@
 
 return [
 
+    /*
+    |--------------------------------------------------------------------------
+    | SEO i deljenje na društvenim mrežama
+    |--------------------------------------------------------------------------
+    */
+    'seo' => [
+        'site_name' => 'Rispetto',
+        'default_title' => 'Rispetto — italijanski restoran u Batajnici',
+        'default_description' => 'Restoran Rispetto u Batajnici — autentična italijanska kuhinja, jelovnik, karta pića, proslave i dostava hrane.',
+        'og_image' => 'images/site/og-image.jpg',
+        'og_image_width' => 1200,
+        'og_image_height' => 630,
+        'locale' => 'sr_RS',
+        'robots' => 'index, follow',
+        'theme_color' => '#050505',
+        'twitter_site' => null,
+
+        'pages' => [
+            'home' => [
+                'title' => 'Početna',
+                'description' => 'Rispetto — autentična italijanska kuhinja u Batajnici. Istražite jelovnik, kartu pića i rezervišite sto za nezaboravno iskustvo.',
+            ],
+            'menu' => [
+                'title' => 'Jelovnik',
+                'description' => 'Pogledajte kompletan jelovnik restorana Rispetto — paste, pice, domaća jela i sezonski specijaliteti pripremljeni od svežih sastojaka.',
+            ],
+            'drinks' => [
+                'title' => 'Karta pića',
+                'description' => 'Karta pića restorana Rispetto — domaća vina, kokteli i osvežavajući napici savršeni uz jelo.',
+            ],
+            'celebrations' => [
+                'title' => 'Proslave',
+                'description' => 'Organizujte rođendane, porodične proslave i poslovne događaje u restoranu Rispetto u Batajnici.',
+            ],
+            'delivery' => [
+                'title' => 'Dostava',
+                'description' => 'Dostava hrane i lično preuzimanje u restoranu Rispetto. Naručite omiljena jela telefonom ili preko Alidede.',
+            ],
+            'about' => [
+                'title' => 'O nama',
+                'description' => 'Upoznajte restoran Rispetto — našu priču, vrednosti i tim koji svakog dana priprema jela sa pažnjom i ljubavlju.',
+            ],
+        ],
+
+        'sitemap' => [
+            ['route' => 'home', 'priority' => '1.0', 'changefreq' => 'weekly'],
+            ['route' => 'menu', 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['route' => 'drinks', 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['route' => 'celebrations', 'priority' => '0.8', 'changefreq' => 'monthly'],
+            ['route' => 'delivery', 'priority' => '0.8', 'changefreq' => 'monthly'],
+            ['route' => 'about', 'priority' => '0.7', 'changefreq' => 'monthly'],
+        ],
+    ],
+
     'phone' => '063/72-88-155',
     'phone_href' => 'tel:+381637288155',
 
@@ -39,7 +93,7 @@ return [
 
     'credits' => [
         'label' => 'Frontrow Digital',
-        'url' => 'https://frontrowdigital.rs',
+        'url' => 'https://frdigitalagency.com',
     ],
 
     /*
