@@ -10,7 +10,7 @@ use Illuminate\View\Component;
 class OptimizedImage extends Component
 {
     /**
-     * @param  list<int>  $widths
+     * @param  list<int>|null  $widths
      */
     public function __construct(
         public string $src,
@@ -20,8 +20,10 @@ class OptimizedImage extends Component
         public string $class = '',
         public bool $priority = false,
         public string $sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
-        public array $widths = [640, 1024, 1280],
-    ) {}
+        public ?array $widths = null,
+    ) {
+        $this->widths ??= SiteImage::responsiveWidths();
+    }
 
     public function assetSrc(): string
     {
@@ -31,6 +33,11 @@ class OptimizedImage extends Component
     public function webpSrc(): ?string
     {
         return SiteImage::webpUrl($this->src);
+    }
+
+    public function webpSrcset(): string
+    {
+        return SiteImage::webpSrcset($this->src, $this->widths);
     }
 
     public function srcset(): string

@@ -49,7 +49,7 @@
 
 @layer components {
     .site-heading {
-        @apply font-display text-3xl font-bold tracking-tight text-rispetto-text sm:text-4xl lg:text-5xl;
+        @apply font-display text-3xl font-medium tracking-tight text-rispetto-text sm:text-4xl lg:text-5xl;
     }
 
     .site-subheading {
@@ -146,6 +146,10 @@
         @apply bg-rispetto-accent text-rispetto-on-accent;
     }
 
+    .category-panel__header {
+        @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6;
+    }
+
     .category-catalog__dropdown {
         @apply relative;
     }
@@ -188,6 +192,26 @@
 
     .menu-price-variants__price {
         @apply shrink-0 font-semibold leading-none text-rispetto-accent tabular-nums;
+    }
+
+    .category-panel[data-pizza-size-panel] [data-pizza-size-price] {
+        @apply hidden;
+    }
+
+    .category-panel[data-pizza-size-panel] [data-menu-item] {
+        @apply hidden;
+    }
+
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='25'] [data-menu-item][data-size-25],
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='35'] [data-menu-item][data-size-35],
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='50'] [data-menu-item][data-size-50] {
+        @apply block;
+    }
+
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='25'] [data-pizza-size-price='25'],
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='35'] [data-pizza-size-price='35'],
+    .category-panel[data-pizza-size-panel][data-active-pizza-size='50'] [data-pizza-size-price='50'] {
+        @apply inline;
     }
 
     .mobile-nav {

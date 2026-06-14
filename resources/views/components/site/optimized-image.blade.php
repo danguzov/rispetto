@@ -1,10 +1,14 @@
 @php
     $srcset = $srcset();
+    $webpSrcset = $webpSrcset();
     $hasSrcset = filled($srcset);
+    $hasWebpSrcset = filled($webpSrcset);
 @endphp
 
 <picture class="block size-full">
-    @if ($webp = $webpSrc())
+    @if ($hasWebpSrcset)
+        <source type="image/webp" srcset="{{ $webpSrcset }}" sizes="{{ $sizes }}">
+    @elseif ($webp = $webpSrc())
         <source type="image/webp" srcset="{{ $webp }}" sizes="{{ $sizes }}">
     @endif
 

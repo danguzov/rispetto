@@ -1,6 +1,14 @@
 // Non-critical UI — učitava se odloženo (defer) posle glavnog site.js
 
-document.addEventListener('DOMContentLoaded', () => {
+function onDocumentReady(callback) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', callback);
+    } else {
+        callback();
+    }
+}
+
+onDocumentReady(() => {
     initScrollReveal();
     initTestimonialsCarousel();
     initCategoryCatalog();
@@ -153,6 +161,15 @@ function initCategoryCatalog() {
             }
 
             setDropdownOpen(false);
+
+            const activePanel = panels.find((panel) => panel.dataset.categoryPanel === slug);
+
+            if (activePanel?.dataset.pizzaSizePanel === 'true') {
+                activatePizzaSize(
+                    activePanel,
+                    activePanel.dataset.activePizzaSize ?? '25',
+                );
+            }
         };
 
         tabs.forEach((tab) => {
@@ -194,5 +211,62 @@ function initCategoryCatalog() {
             : tabs[0].dataset.categoryTab;
 
         activate(initialSlug);
+
+        initPizzaSizeTabs(catalog);
+    });
+}
+
+function activatePizzaSize(panel, sizeKey) {
+    if (! panel || panel.dataset.pizzaSizePanel !== 'true') {
+        return;
+    }
+
+    panel.dataset.activePizzaSize = sizeKey;
+
+    const tabs = [...panel.querySelectorAll('[data-pizza-size-tab]')];
+    const items = [...panel.querySelectorAll('[data-menu-item]')];
+    const emptyMessage = panel.querySelector('[data-pizza-size-empty]');
+
+    tabs.forEach((tab) => {
+        const isActive = tab.dataset.pizzaSizeTab === sizeKey;
+
+        tab.dataset.active = isActive ? 'true' : 'false';
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    let visibleCount = 0;
+
+    items.forEach((item) => {
+        const sizes = (item.dataset.sizes ?? '').split(',').filter(Boolean);
+        const isVisible = sizes.includes(sizeKey);
+
+        item.hidden = ! isVisible;
+
+        if (isVisible) {
+            visibleCount += 1;
+        }
+    });
+
+    if (emptyMessage) {
+        emptyMessage.hidden = visibleCount > 0;
+    }
+}
+
+function initPizzaSizeTabs(catalog) {
+    const panels = [...catalog.querySelectorAll('[data-pizza-size-panel]')];
+
+    panels.forEach((panel) => {
+        const tabs = [...panel.querySelectorAll('[data-pizza-size-tab]')];
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', (event) => {
+                event.preventDefault();
+                activatePizzaSize(panel, tab.dataset.pizzaSizeTab);
+            });
+        });
+
+        const defaultSize = panel.dataset.activePizzaSize ?? tabs[0]?.dataset.pizzaSizeTab ?? '25';
+
+        activatePizzaSize(panel, defaultSize);
     });
 }

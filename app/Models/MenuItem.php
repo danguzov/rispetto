@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasPriceVariants;
+use App\Concerns\OptimizesStorageImage;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,7 @@ use Illuminate\Validation\ValidationException;
 class MenuItem extends Model
 {
     use HasPriceVariants;
+    use OptimizesStorageImage;
 
     /**
      * @return array<string, string>

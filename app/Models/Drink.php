@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\OptimizesStorageImage;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +36,8 @@ use Illuminate\Support\Carbon;
 ])]
 class Drink extends Model
 {
+    use OptimizesStorageImage;
+
     /**
      * @return array<string, string>
      */

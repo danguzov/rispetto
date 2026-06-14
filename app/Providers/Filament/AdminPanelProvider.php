@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Controllers\Admin\QrCodeDownloadController;
+use App\Support\RispettoQrCode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -15,6 +17,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
@@ -53,6 +56,16 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->routes(function (): void {
+                Route::get('/qr-codes/{type}/download', QrCodeDownloadController::class)
+                    ->middleware([Authenticate::class])
+                    ->name('qr-codes.download')
+                    ->whereIn('type', [
+                        RispettoQrCode::TYPE_MENU,
+                        RispettoQrCode::TYPE_INSTAGRAM,
+                        RispettoQrCode::TYPE_FACEBOOK,
+                    ]);
+            });
     }
 }

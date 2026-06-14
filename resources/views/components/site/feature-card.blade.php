@@ -29,6 +29,6 @@
         @endunless
     </div>
 
-    <h2 class="font-display text-xl font-bold text-rispetto-text sm:text-2xl">{{ $title }}</h2>
+    <h2 class="font-display text-xl font-medium text-rispetto-text sm:text-2xl">{{ $title }}</h2>
     <p class="mt-3 text-sm leading-relaxed text-rispetto-muted sm:text-base">{{ $description }}</p>
 </article>

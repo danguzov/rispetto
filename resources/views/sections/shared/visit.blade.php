@@ -21,7 +21,7 @@ $hours = config('site.opening_hours');
             {{-- Radno vreme — levo, malo uvučena, preklapa mapu od sredine naviše --}}
             <div class="relative z-10 mx-auto mb-6 w-full max-w-md max-lg:-mb-12 lg:absolute lg:bottom-[12.5rem] lg:left-8 lg:mx-0 lg:mb-0 lg:max-w-[20rem] xl:left-12 xl:max-w-[22rem]">
                 <div class="rounded-2xl border border-rispetto-border bg-rispetto-elevated p-6 shadow-xl sm:p-8">
-                    <h3 class="font-display text-2xl font-bold text-rispetto-text">Radno vreme</h3>
+                    <h3 class="font-display text-2xl font-medium text-rispetto-text">Radno vreme</h3>
 
                     <ul class="mt-6 space-y-0">
                         @foreach ($hours as $row)

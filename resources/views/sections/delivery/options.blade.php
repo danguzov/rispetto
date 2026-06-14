@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="delivery-option-card__body">
-                        <h2 class="font-display text-2xl font-bold leading-tight text-rispetto-text sm:text-3xl lg:text-[2rem]">
+                        <h2 class="font-display text-2xl font-medium leading-tight text-rispetto-text sm:text-3xl lg:text-[2rem]">
                             {{ $option['title'] }}
                         </h2>
 

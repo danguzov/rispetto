@@ -8,6 +8,9 @@
     /** @var \Illuminate\Support\Collection<int, array{slug: string, name: string, items: \Illuminate\Support\Collection}> $entries */
     $hasEntries = $entries->isNotEmpty();
     $firstEntry = $entries->first();
+    $pizzaCategorySlug = config('site.menu.pizza_category_slug');
+    $pizzaSizes = config('site.menu.pizza_sizes', []);
+    $defaultPizzaSize = $pizzaSizes[0]['key'] ?? '25';
 @endphp
 
 @if ($hasEntries)
@@ -82,21 +85,80 @@
 
             <div class="min-w-0">
                 @foreach ($entries as $index => $entry)
+                    @php
+                        $isPizzaCategory = $entry['slug'] === $pizzaCategorySlug;
+                    @endphp
                     <section
                         class="category-panel"
                         role="tabpanel"
                         id="catalog-panel-{{ $entry['slug'] }}"
                         data-category-panel="{{ $entry['slug'] }}"
                         aria-labelledby="catalog-tab-{{ $entry['slug'] }}"
+                        @if ($isPizzaCategory)
+                            data-pizza-size-panel="true"
+                            data-active-pizza-size="{{ $defaultPizzaSize }}"
+                        @endif
                         @if ($index !== 0) hidden @endif
                     >
-                        <header class="mb-6 border-b border-rispetto-border pb-4 sm:mb-8">
-                            <h2 class="font-display text-3xl font-bold text-rispetto-text sm:text-4xl">{{ $entry['name'] }}</h2>
+                        <header class="category-panel__header mb-6 border-b border-rispetto-border pb-4 sm:mb-8">
+                            <h2 class="font-display text-3xl font-medium text-rispetto-text sm:text-4xl">{{ $entry['name'] }}</h2>
+
+                            @if ($isPizzaCategory)
+                                <div
+                                    class="flex gap-2 overflow-x-auto pb-0.5"
+                                    role="tablist"
+                                    aria-label="Veličine pice"
+                                    data-pizza-size-tabs
+                                >
+                                    @foreach ($pizzaSizes as $sizeIndex => $size)
+                                        <button
+                                            type="button"
+                                            class="catalog-tab shrink-0"
+                                            role="tab"
+                                            data-pizza-size-tab="{{ $size['key'] }}"
+                                            data-active="{{ $sizeIndex === 0 ? 'true' : 'false' }}"
+                                            aria-selected="{{ $sizeIndex === 0 ? 'true' : 'false' }}"
+                                        >
+                                            {{ $size['label'] }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
                         </header>
 
-                        <div>
+                        @if ($isPizzaCategory)
+                            <p
+                                class="site-panel mb-6 hidden border-dashed p-8 text-center text-sm text-rispetto-muted sm:text-base"
+                                data-pizza-size-empty
+                                hidden
+                            >
+                                Nema pica u ovoj veličini.
+                            </p>
+                        @endif
+
+                        <div @if ($isPizzaCategory) data-pizza-items @endif>
                             @foreach ($entry['items'] as $item)
-                                <x-dynamic-component :component="$itemComponent" :item="$item" />
+                                @if ($isPizzaCategory && $item->hasPriceVariants())
+                                    <div
+                                        data-menu-item
+                                        data-sizes="{{ implode(',', $item->availableSizeKeys()) }}"
+                                        @foreach ($item->availableSizeKeys() as $sizeKey)
+                                            data-size-{{ $sizeKey }}="true"
+                                        @endforeach
+                                    >
+                                        <x-dynamic-component
+                                            :component="$itemComponent"
+                                            :item="$item"
+                                            :pizza-size-filter="true"
+                                        />
+                                    </div>
+                                @else
+                                    <x-dynamic-component
+                                        :component="$itemComponent"
+                                        :item="$item"
+                                        :pizza-size-filter="$isPizzaCategory && $item->hasPriceVariants()"
+                                    />
+                                @endif
                             @endforeach
                         </div>
                     </section>

@@ -1,5 +1,6 @@
 @props([
     'item',
+    'pizzaSizeFilter' => false,
 ])
 
 @php
@@ -23,11 +24,11 @@
     <div class="min-w-0 flex-1">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div class="min-w-0 space-y-1">
-                <h3 class="font-display text-lg font-bold text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
+                <h3 class="font-display text-lg font-medium text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
                 <x-site.item-weight :weight="$item->weight" />
             </div>
 
-            <x-site.menu-pricing :item="$item" class="shrink-0" />
+            <x-site.menu-pricing :item="$item" :pizza-size-filter="$pizzaSizeFilter" class="shrink-0" />
         </div>
 
         @if ($item->description || $item->contents)

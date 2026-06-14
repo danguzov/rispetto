@@ -11,4 +11,11 @@ Prosalve stranica
 2. Treca sekcija "Prosalve vikendom" -> prvo treba da ide teskt pa onda slika
 
 O nama stranica
-1. Sekcija "Vise o restoranu" -> prvo tre da ide teskt pa onda slika 
+1. Sekcija "Vise o restoranu" -> prvo tre da ide teskt pa onda slika
+
+DOdATI VARIJANTE ZA HRANU
+dodati varijante za pice 25cm, 35cm 50cm - da svaka ima svoju cenu koja se moze uneti, slika ce da bude jedna i ime jedno, ali samo cemo na frontu da podelimo negde na,2,3,4 pice da se prikzu cene shodno velicini pice
+
+izmeniti da opisi budu opcioni
+dodati polje za gramazu (opciono)
+

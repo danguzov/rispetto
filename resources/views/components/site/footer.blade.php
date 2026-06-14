@@ -16,7 +16,7 @@
 
             {{-- Kolona 2: kontakt --}}
             <div class="flex flex-col items-start gap-5">
-                <h2 class="text-sm font-bold uppercase tracking-wide text-rispetto-text">
+                <h2 class="text-sm font-medium uppercase tracking-wide text-rispetto-text">
                     Kontaktirajte nas
                 </h2>
                 <ul class="flex w-full flex-col gap-4">
@@ -43,7 +43,7 @@
 
             {{-- Kolona 3: navigacija --}}
             <div class="flex flex-col items-start gap-5">
-                <h2 class="text-sm font-bold uppercase tracking-wide text-rispetto-text">
+                <h2 class="text-sm font-medium uppercase tracking-wide text-rispetto-text">
                     Navigacija
                 </h2>
                 <ul class="flex flex-col gap-3">
@@ -68,7 +68,7 @@
                 $partnerLogoIsSvg = str_ends_with(strtolower($partnerLogo), '.svg');
             @endphp
             <div class="flex flex-col items-start gap-5">
-                <h2 class="text-sm font-bold uppercase tracking-wide text-rispetto-text">
+                <h2 class="text-sm font-medium uppercase tracking-wide text-rispetto-text">
                     Partneri sa:
                 </h2>
                 @if ($partnerLogoExists)

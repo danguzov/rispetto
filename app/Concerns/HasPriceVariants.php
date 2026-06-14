@@ -70,4 +70,38 @@ trait HasPriceVariants
 
         return $starting !== null ? $this->formattedPrice($starting) : null;
     }
+
+    public static function normalizeSizeKey(string $label): string
+    {
+        return preg_replace('/\D+/', '', $label) ?? '';
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function availableSizeKeys(): array
+    {
+        return collect($this->normalizedPriceVariants())
+            ->map(fn (array $variant): string => self::normalizeSizeKey($variant['label']))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function hasSizeKey(string $sizeKey): bool
+    {
+        return in_array($sizeKey, $this->availableSizeKeys(), true);
+    }
+
+    public function priceForSizeKey(string $sizeKey): ?float
+    {
+        foreach ($this->normalizedPriceVariants() as $variant) {
+            if (self::normalizeSizeKey($variant['label']) === $sizeKey) {
+                return $variant['price'];
+            }
+        }
+
+        return null;
+    }
 }

@@ -59,6 +59,31 @@ return [
     'phone' => '063/72-88-155',
     'phone_href' => 'tel:+381637288155',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Jelovnik — kategorija pice i veličine
+    |--------------------------------------------------------------------------
+    */
+    'menu' => [
+        'pizza_category_slug' => 'pizza',
+        'pizza_sizes' => [
+            ['key' => '25', 'label' => '25 cm'],
+            ['key' => '35', 'label' => '35 cm'],
+            ['key' => '50', 'label' => '50 cm'],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Responsive slike (storage + statične)
+    |--------------------------------------------------------------------------
+    */
+    'images' => [
+        'responsive_widths' => [640, 1024, 1280],
+        'webp_quality' => 82,
+        'jpeg_quality' => 85,
+    ],
+
     'brand_logo' => 'images/site/rispetto-logo.svg',
 
     'contact' => [
@@ -80,9 +105,23 @@ return [
     ],
 
     'social' => [
-        ['label' => 'Facebook', 'icon' => 'facebook', 'url' => '#'],
-        ['label' => 'Instagram', 'icon' => 'instagram', 'url' => '#'],
-        ['label' => 'TikTok', 'icon' => 'tiktok', 'url' => '#'],
+        ['label' => 'Facebook', 'icon' => 'facebook', 'url' => env('RISPETTO_FACEBOOK_URL', 'https://www.facebook.com/people/Rispetto-Batajnica/61561537636784/')],
+        ['label' => 'Instagram', 'icon' => 'instagram', 'url' => env('RISPETTO_INSTAGRAM_URL', 'https://www.instagram.com/ristorante.rispetto')],
+        ['label' => 'TikTok', 'icon' => 'tiktok', 'url' => env('RISPETTO_TIKTOK_URL', '#')],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | QR kodovi (Filament admin — preuzimanje SVG)
+    |--------------------------------------------------------------------------
+    */
+    'qr' => [
+        'size' => 400,
+        'margin' => 1,
+        'colors' => [
+            'background' => [5, 5, 5],
+            'foreground' => [0, 255, 3],
+        ],
     ],
 
     'partner' => [

@@ -17,6 +17,10 @@ test('menu item exposes normalized pizza price variants', function (): void {
     expect($item->normalizedPriceVariants()[0])->toMatchArray(['label' => '25 cm', 'price' => 850.0]);
     expect($item->displayPrice())->toBeNull();
     expect($item->displayStartingPrice())->toBe('850');
+    expect($item->availableSizeKeys())->toBe(['25', '35']);
+    expect($item->hasSizeKey('25'))->toBeTrue();
+    expect($item->hasSizeKey('50'))->toBeFalse();
+    expect($item->priceForSizeKey('35'))->toBe(1150.0);
 });
 
 test('menu item without variants uses single price', function (): void {

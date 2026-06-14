@@ -7,10 +7,22 @@ use Illuminate\Support\Facades\File;
 final class SiteImage
 {
     /**
+     * @return list<int>
+     */
+    public static function responsiveWidths(): array
+    {
+        /** @var list<int> $widths */
+        $widths = config('site.images.responsive_widths', [640, 1024, 1280]);
+
+        return $widths;
+    }
+
+    /**
      * @param  list<int>  $widths
      */
-    public static function srcset(string $path, array $widths): string
+    public static function srcset(string $path, ?array $widths = null): string
     {
+        $widths ??= self::responsiveWidths();
         $entries = [];
 
         foreach ($widths as $width) {
@@ -23,6 +35,33 @@ final class SiteImage
 
         if ($entries === [] && File::exists(self::publicPath($path))) {
             $entries[] = self::url($path).' 1x';
+        }
+
+        return implode(', ', $entries);
+    }
+
+    /**
+     * @param  list<int>  $widths
+     */
+    public static function webpSrcset(string $path, ?array $widths = null): string
+    {
+        $widths ??= self::responsiveWidths();
+        $entries = [];
+
+        foreach ($widths as $width) {
+            $webpVariant = self::replaceExtension(self::variantPath($path, $width), 'webp');
+
+            if (File::exists(self::publicPath($webpVariant))) {
+                $entries[] = self::url($webpVariant).' '.$width.'w';
+            }
+        }
+
+        if ($entries === []) {
+            $baseWebp = self::replaceExtension($path, 'webp');
+
+            if (File::exists(self::publicPath($baseWebp))) {
+                $entries[] = self::url($baseWebp).' 1x';
+            }
         }
 
         return implode(', ', $entries);
