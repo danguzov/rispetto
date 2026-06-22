@@ -3,6 +3,7 @@
 @source '../views/components/site';
 @source '../views/sections';
 @source '../views/pages';
+@source '../views/errors';
 @source '../views/partials/site-head.blade.php';
 
 @theme {

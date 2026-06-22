@@ -14,3 +14,12 @@ it('renders public site pages', function (string $uri) {
     '/dostava',
     '/o-nama',
 ]);
+
+it('renders branded 404 page for unknown routes', function (): void {
+    $html = $this->get('/nepostojeca-stranica')->assertNotFound()->getContent();
+
+    expect($html)
+        ->toContain('Ova stranica nije na')
+        ->toContain('Jelovnik')
+        ->toContain('noindex, follow');
+});
