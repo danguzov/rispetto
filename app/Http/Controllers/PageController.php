@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ProductType;
-use App\Models\Category;
-use App\Models\Drink;
-use App\Models\MenuItem;
+use App\Support\SitePageCache;
 use Illuminate\Contracts\View\View;
 
 class PageController extends Controller
@@ -15,13 +12,7 @@ class PageController extends Controller
         return view('pages.home', [
             'sectionData' => [
                 'shared.featured-menu' => [
-                    'items' => MenuItem::query()
-                        ->where('is_active', true)
-                        ->where('featured', true)
-                        ->with('category')
-                        ->orderBy('sort_order')
-                        ->limit(4)
-                        ->get(),
+                    'items' => SitePageCache::featuredMenuItems(),
                 ],
             ],
         ]);
@@ -29,39 +20,17 @@ class PageController extends Controller
 
     public function menu(): View
     {
-        $categories = Category::query()
-            ->where('type', ProductType::Food)
-            ->with(['menuItems' => function ($query): void {
-                $query->where('is_active', true)
-                    ->with('tags')
-                    ->orderBy('sort_order');
-            }])
-            ->orderBy('sort_order')
-            ->get();
-
-        return view('pages.menu', compact('categories'));
+        return view('pages.menu', [
+            'categories' => SitePageCache::menuCategories(),
+        ]);
     }
 
     public function drinks(): View
     {
-        $categories = Category::query()
-            ->where('type', ProductType::Drink)
-            ->with(['drinks' => function ($query): void {
-                $query->where('is_active', true)
-                    ->with('tags')
-                    ->orderBy('sort_order');
-            }])
-            ->orderBy('sort_order')
-            ->get();
-
-        $uncategorizedDrinks = Drink::query()
-            ->where('is_active', true)
-            ->whereNull('category_id')
-            ->with('tags')
-            ->orderBy('sort_order')
-            ->get();
-
-        return view('pages.drinks', compact('categories', 'uncategorizedDrinks'));
+        return view('pages.drinks', [
+            'categories' => SitePageCache::drinkCategories(),
+            'uncategorizedDrinks' => SitePageCache::uncategorizedDrinks(),
+        ]);
     }
 
     public function celebrations(): View
@@ -71,15 +40,9 @@ class PageController extends Controller
 
     public function delivery(): View
     {
-        $featuredMenuItems = MenuItem::query()
-            ->where('is_active', true)
-            ->where('featured', true)
-            ->with('category')
-            ->orderBy('sort_order')
-            ->limit(4)
-            ->get();
-
-        return view('pages.delivery', compact('featuredMenuItems'));
+        return view('pages.delivery', [
+            'featuredMenuItems' => SitePageCache::featuredMenuItems(),
+        ]);
     }
 
     public function about(): View

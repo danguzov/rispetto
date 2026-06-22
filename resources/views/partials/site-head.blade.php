@@ -1,4 +1,6 @@
 @php
+    use App\Support\SiteImage;
+    use App\Support\SiteScripts;
     use App\Support\SiteSeo;
 
     $seo = SiteSeo::resolve($title ?? null, $description ?? null, $ogImage ?? null, $robots ?? null);
@@ -6,6 +8,11 @@
         SiteSeo::restaurantSchema(),
         SiteSeo::webPageSchema($seo['full_title'], $seo['description']),
     ];
+
+    $lcpSrc = filled($lcpImage ?? null) && SiteImage::exists($lcpImage)
+        ? SiteImage::fallbackSrc($lcpImage)
+        : null;
+    $lcpMime = $lcpSrc ? SiteImage::mimeTypeForUrl($lcpSrc) : null;
 @endphp
 
 <meta charset="utf-8" />
@@ -44,6 +51,12 @@
 
 <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 
-@fonts
+@if ($lcpSrc)
+<link rel="preload" as="image" href="{{ $lcpSrc }}" @if ($lcpMime) type="{{ $lcpMime }}" @endif fetchpriority="high">
+@endif
+
+@include('partials.site-display-fonts')
+
+@fonts('outfit')
 @vite(['resources/css/site.css', 'resources/js/site.js'])
-@vite(['resources/js/defer.js'])
+@vite(SiteScripts::deferEntries())

@@ -6,7 +6,7 @@
             </x-slot>
 
             <x-slot name="description">
-                SVG format — spreman za štampu u bilo kojoj veličini. Boje: Rispetto crna pozadina i zelena (#00ff03).
+                SVG format — spreman za štampu u bilo kojoj veličini. Boje: klasični crno-beli QR kod.
                 Error correction: High (H) — otporniji na ogrebotine i fleke na jelovniku.
             </x-slot>
 

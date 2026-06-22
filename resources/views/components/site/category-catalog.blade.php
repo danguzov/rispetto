@@ -11,6 +11,7 @@
     $pizzaCategorySlug = config('site.menu.pizza_category_slug');
     $pizzaSizes = config('site.menu.pizza_sizes', []);
     $defaultPizzaSize = $pizzaSizes[0]['key'] ?? '25';
+    $categoryHoursNotes = config('site.menu.category_hours_note', []);
 @endphp
 
 @if ($hasEntries)
@@ -32,7 +33,13 @@
                         aria-expanded="false"
                         aria-haspopup="listbox"
                     >
-                        <span data-category-dropdown-label>{{ $firstEntry['name'] }}</span>
+                        <span class="font-sans" data-category-dropdown-label>
+                            @if ($firstHoursNote = $categoryHoursNotes[$firstEntry['slug']] ?? null)
+                                {{ $firstEntry['name'] }} <span class="font-display font-medium italic normal-case text-rispetto-accent">({{ $firstHoursNote }})</span>
+                            @else
+                                {{ $firstEntry['name'] }}
+                            @endif
+                        </span>
                         <svg class="category-catalog__chevron size-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
@@ -45,12 +52,17 @@
                         hidden
                     >
                         @foreach ($entries as $index => $entry)
+                            @php
+                                $hoursNote = $categoryHoursNotes[$entry['slug']] ?? null;
+                            @endphp
                             <li role="presentation">
                                 <button
                                     type="button"
                                     class="category-catalog__option catalog-tab w-full"
                                     role="option"
                                     data-category-tab="{{ $entry['slug'] }}"
+                                    data-category-name="{{ $entry['name'] }}"
+                                    @if ($hoursNote) data-category-note="{{ $hoursNote }}" @endif
                                     data-active="{{ $index === 0 ? 'true' : 'false' }}"
                                     aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
                                 >
@@ -67,12 +79,17 @@
                     role="tablist"
                 >
                     @foreach ($entries as $index => $entry)
+                        @php
+                            $hoursNote = $categoryHoursNotes[$entry['slug']] ?? null;
+                        @endphp
                         <button
                             type="button"
                             class="catalog-tab w-full"
                             role="tab"
                             id="catalog-tab-{{ $entry['slug'] }}"
                             data-category-tab="{{ $entry['slug'] }}"
+                            data-category-name="{{ $entry['name'] }}"
+                            @if ($hoursNote) data-category-note="{{ $hoursNote }}" @endif
                             data-active="{{ $index === 0 ? 'true' : 'false' }}"
                             aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
                             aria-controls="catalog-panel-{{ $entry['slug'] }}"
@@ -101,7 +118,7 @@
                         @if ($index !== 0) hidden @endif
                     >
                         <header class="category-panel__header mb-6 border-b border-rispetto-border pb-4 sm:mb-8">
-                            <h2 class="font-display text-3xl font-medium text-rispetto-text sm:text-4xl">{{ $entry['name'] }}</h2>
+                            <x-site.category-heading :name="$entry['name']" :slug="$entry['slug']" />
 
                             @if ($isPizzaCategory)
                                 <div

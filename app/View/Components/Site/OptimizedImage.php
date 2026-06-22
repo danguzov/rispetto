@@ -27,7 +27,7 @@ class OptimizedImage extends Component
 
     public function assetSrc(): string
     {
-        return SiteImage::url($this->src);
+        return SiteImage::fallbackSrc($this->src, $this->widths);
     }
 
     public function webpSrc(): ?string

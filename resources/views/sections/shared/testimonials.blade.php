@@ -1,5 +1,6 @@
 @php
 $reviews = config('site.testimonials');
+$desktopDotCount = max(1, count($reviews) - 2);
 @endphp
 
 <x-site.section>
@@ -18,7 +19,7 @@ $reviews = config('site.testimonials');
             <div class="overflow-hidden">
                 <div
                     data-testimonials-track
-                    class="flex gap-6 transition-transform duration-300 ease-out">
+                    class="flex cursor-grab gap-6 transition-transform duration-300 ease-out active:cursor-grabbing">
                     @foreach ($reviews as $review)
                     <div
                         data-testimonials-slide
@@ -35,16 +36,31 @@ $reviews = config('site.testimonials');
             </div>
 
             @if (count($reviews) > 1)
-            <div class="mt-8 flex justify-center gap-2" data-testimonials-dots role="tablist" aria-label="Recenzije">
+            {{-- Mobilni: jedna tačka po recenziji --}}
+            <div class="mt-8 flex justify-center gap-2 md:hidden" data-testimonials-dots="mobile" role="tablist" aria-label="Recenzije">
                 @foreach ($reviews as $index => $review)
                 <button
                     type="button"
                     data-testimonials-dot="{{ $index }}"
                     class="size-2.5 rounded-full bg-rispetto-border transition-colors data-[active=true]:bg-rispetto-accent"
                     aria-label="Recenzija {{ $index + 1 }}"
-                    @if ($index===0) data-active="true" @endif></button>
+                    @if ($index === 0) data-active="true" @endif></button>
                 @endforeach
             </div>
+
+            {{-- Desktop: tačke po poziciji karusela (3 vidljive od 5) --}}
+            @if ($desktopDotCount > 1)
+            <div class="mt-8 hidden justify-center gap-2 md:flex" data-testimonials-dots="desktop" role="tablist" aria-label="Recenzije">
+                @for ($index = 0; $index < $desktopDotCount; $index++)
+                <button
+                    type="button"
+                    data-testimonials-dot="{{ $index }}"
+                    class="size-2.5 rounded-full bg-rispetto-border transition-colors data-[active=true]:bg-rispetto-accent"
+                    aria-label="Recenzija {{ $index + 1 }}"
+                    @if ($index === 0) data-active="true" @endif></button>
+                @endfor
+            </div>
+            @endif
             @endif
         </div>
     </x-site.container>

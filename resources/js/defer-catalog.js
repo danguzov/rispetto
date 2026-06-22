@@ -1,117 +1,8 @@
-// Non-critical UI — učitava se odloženo (defer) posle glavnog site.js
-
-function onDocumentReady(callback) {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', callback);
-    } else {
-        callback();
-    }
-}
+import { onDocumentReady } from './site/on-ready.js';
 
 onDocumentReady(() => {
-    initScrollReveal();
-    initTestimonialsCarousel();
     initCategoryCatalog();
 });
-
-function initScrollReveal() {
-    const sections = document.querySelectorAll('[data-site-reveal]');
-
-    if (sections.length === 0) {
-        return;
-    }
-
-    const reveal = (section) => {
-        if (section.dataset.revealed === 'true') {
-            return;
-        }
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                section.dataset.revealed = 'true';
-            });
-        });
-    };
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        sections.forEach((section) => {
-            section.dataset.revealed = 'true';
-        });
-
-        return;
-    }
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (! entry.isIntersecting) {
-                    return;
-                }
-
-                reveal(entry.target);
-                observer.unobserve(entry.target);
-            });
-        },
-        {
-            root: null,
-            rootMargin: '0px 0px -4% 0px',
-            threshold: 0.08,
-        },
-    );
-
-    sections.forEach((section) => {
-        section.getBoundingClientRect();
-        observer.observe(section);
-    });
-}
-
-function initTestimonialsCarousel() {
-    const root = document.querySelector('[data-testimonials]');
-
-    if (! root) {
-        return;
-    }
-
-    const track = root.querySelector('[data-testimonials-track]');
-    const slides = [...root.querySelectorAll('[data-testimonials-slide]')];
-    const dots = [...root.querySelectorAll('[data-testimonials-dot]')];
-
-    if (! track || slides.length === 0) {
-        return;
-    }
-
-    let activeIndex = 0;
-
-    const visibleCount = () => (window.matchMedia('(min-width: 768px)').matches ? 3 : 1);
-
-    const maxIndex = () => Math.max(0, slides.length - visibleCount());
-
-    const update = () => {
-        const index = Math.min(activeIndex, maxIndex());
-        activeIndex = index;
-
-        const gap = Number.parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 24;
-        const slideWidth = slides[0].getBoundingClientRect().width;
-        track.style.transform = `translateX(-${index * (slideWidth + gap)}px)`;
-
-        dots.forEach((dot, dotIndex) => {
-            const isActive = dotIndex === index;
-            dot.dataset.active = isActive ? 'true' : 'false';
-            dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        });
-    };
-
-    dots.forEach((dot) => {
-        dot.addEventListener('click', () => {
-            activeIndex = Number(dot.dataset.testimonialsDot ?? 0);
-            update();
-        });
-    });
-
-    window.addEventListener('resize', update);
-
-    update();
-}
 
 function initCategoryCatalog() {
     const catalogs = document.querySelectorAll('[data-category-catalog]');
@@ -141,7 +32,28 @@ function initCategoryCatalog() {
         const activeTabLabel = (slug) => {
             const activeTab = tabs.find((tab) => tab.dataset.categoryTab === slug);
 
-            return activeTab?.textContent?.trim() ?? '';
+            if (! activeTab) {
+                return { name: '', note: '' };
+            }
+
+            return {
+                name: activeTab.dataset.categoryName ?? activeTab.textContent?.trim() ?? '',
+                note: activeTab.dataset.categoryNote ?? '',
+            };
+        };
+
+        const renderDropdownLabel = (slug) => {
+            if (! dropdownLabel) {
+                return;
+            }
+
+            const { name, note } = activeTabLabel(slug);
+
+            if (note) {
+                dropdownLabel.innerHTML = `${name} <span class="font-display font-medium italic normal-case text-rispetto-accent">(${note})</span>`;
+            } else {
+                dropdownLabel.textContent = name;
+            }
         };
 
         const activate = (slug) => {
@@ -156,9 +68,7 @@ function initCategoryCatalog() {
                 panel.hidden = panel.dataset.categoryPanel !== slug;
             });
 
-            if (dropdownLabel) {
-                dropdownLabel.textContent = activeTabLabel(slug);
-            }
+            renderDropdownLabel(slug);
 
             setDropdownOpen(false);
 

@@ -71,6 +71,10 @@ return [
             ['key' => '35', 'label' => '35 cm'],
             ['key' => '50', 'label' => '50 cm'],
         ],
+        'category_hours_note' => [
+            'dorucak' => 'do 13 h',
+            'sendvici' => 'do 13 h',
+        ],
     ],
 
     /*
@@ -119,8 +123,8 @@ return [
         'size' => 400,
         'margin' => 1,
         'colors' => [
-            'background' => [5, 5, 5],
-            'foreground' => [0, 255, 3],
+            'background' => [255, 255, 255],
+            'foreground' => [0, 0, 0],
         ],
     ],
 

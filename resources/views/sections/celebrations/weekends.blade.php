@@ -5,7 +5,7 @@ $image = 'images/site/proslave-vikendom.jpg';
 <x-site.section>
     <x-site.container>
         <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-            <div class="order-1 space-y-5 text-center lg:order-1 lg:text-left">
+            <div class="order-1 text-center lg:order-1 lg:text-left">
                 <h2 class="font-display text-3xl font-medium leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
                     Rezervacija nedeljom
                 </h2>

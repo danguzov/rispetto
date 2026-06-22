@@ -5,13 +5,12 @@
 
 <a
     href="{{ $href }}"
-    @class([
+    {{ $attributes->class([
         'text-sm font-medium transition',
         'text-rispetto-accent' => $active,
-        'text-rispetto-muted hover:text-rispetto-text' => ! $active,
-    ])
+        'text-rispetto-muted hover:text-rispetto-accent' => ! $active,
+    ]) }}
     @if ($active) aria-current="page" @endif
-    {{ $attributes }}
 >
     {{ $slot }}
 </a>

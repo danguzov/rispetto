@@ -23,7 +23,7 @@
     <div class="min-w-0 flex-1">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div class="min-w-0 space-y-1">
-                <h3 class="font-display text-lg font-medium text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
+                <h3 class="font-sans text-lg font-medium text-rispetto-text sm:text-xl">{{ $item->name }}</h3>
                 <x-site.item-weight :weight="$item->weight" />
             </div>
 

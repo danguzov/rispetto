@@ -11,6 +11,28 @@ use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
 
+test('site image fallback src prefers smallest webp variant', function (): void {
+    $directory = 'images/site/test-fallback';
+    $relativePath = "{$directory}/sample.jpg";
+    $basePath = public_path($relativePath);
+
+    File::ensureDirectoryExists(dirname($basePath));
+    File::put($basePath, 'original');
+
+    File::put(public_path(SiteImage::variantPath($relativePath, 640)), 'variant-640');
+    File::put(
+        public_path(SiteImage::replaceExtension(SiteImage::variantPath($relativePath, 640), 'webp')),
+        'webp-640',
+    );
+    File::put(public_path(SiteImage::variantPath($relativePath, 1024)), 'variant-1024');
+
+    expect(SiteImage::fallbackSrc($relativePath, [640, 1024]))
+        ->toContain('sample-640w.webp')
+        ->not->toContain('sample.jpg');
+
+    File::deleteDirectory(public_path($directory));
+});
+
 test('site image builds responsive srcset and webp srcset', function (): void {
     $directory = 'images/site/test-srcset';
     $relativePath = "{$directory}/sample.jpg";
@@ -46,7 +68,7 @@ test('storage image optimizer generates responsive variants', function (): void 
     }
 
     $relativePath = 'menu-items/test-optimizer.jpg';
-    $sourcePath = public_path('storage/'.$relativePath);
+    $sourcePath = SiteImage::diskPath($relativePath);
 
     File::ensureDirectoryExists(dirname($sourcePath));
 
@@ -58,9 +80,9 @@ test('storage image optimizer generates responsive variants', function (): void 
 
     StorageImageOptimizer::optimize($relativePath);
 
-    expect(File::exists(public_path('storage/'.SiteImage::replaceExtension($relativePath, 'webp'))))->toBeTrue()
-        ->and(File::exists(public_path('storage/'.SiteImage::variantPath($relativePath, 640))))->toBeTrue()
-        ->and(File::exists(public_path('storage/'.SiteImage::replaceExtension(SiteImage::variantPath($relativePath, 640), 'webp'))))->toBeTrue();
+    expect(File::exists(SiteImage::diskPath(SiteImage::replaceExtension($relativePath, 'webp'))))->toBeTrue()
+        ->and(File::exists(SiteImage::diskPath(SiteImage::variantPath($relativePath, 640))))->toBeTrue()
+        ->and(File::exists(SiteImage::diskPath(SiteImage::replaceExtension(SiteImage::variantPath($relativePath, 640), 'webp'))))->toBeTrue();
 
     StorageImageOptimizer::deleteVariants($relativePath);
     File::delete($sourcePath);
@@ -72,7 +94,7 @@ test('menu item image upload triggers storage optimization', function (): void {
     }
 
     $relativePath = 'menu-items/test-model.jpg';
-    $sourcePath = public_path('storage/'.$relativePath);
+    $sourcePath = SiteImage::diskPath($relativePath);
 
     File::ensureDirectoryExists(dirname($sourcePath));
 
@@ -98,7 +120,7 @@ test('menu item image upload triggers storage optimization', function (): void {
         'is_active' => true,
     ]);
 
-    expect(File::exists(public_path('storage/'.SiteImage::variantPath($relativePath, 640))))->toBeTrue();
+    expect(File::exists(SiteImage::diskPath(SiteImage::variantPath($relativePath, 640))))->toBeTrue();
 
     $item->delete();
     StorageImageOptimizer::deleteVariants($relativePath);

@@ -13,16 +13,20 @@ export default defineConfig({
                 'resources/css/site.css',
                 'resources/js/app.js',
                 'resources/js/site.js',
-                'resources/js/defer.js',
+                'resources/js/defer-reveal.js',
+                'resources/js/defer-carousel.js',
+                'resources/js/defer-catalog.js',
                 'resources/js/passkeys.js',
             ],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
                     weights: [400, 500, 600],
+                    preload: [{ weight: 400 }],
                 }),
                 bunny('Outfit', {
-                    weights: [300, 400, 500, 600, 700],
+                    weights: [400, 500, 600, 700],
+                    preload: [{ weight: 400 }, { weight: 500 }],
                 }),
             ],
         }),

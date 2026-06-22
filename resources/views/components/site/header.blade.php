@@ -103,7 +103,7 @@
                 <x-site.nav-link
                     :href="isset($link['route']) ? route($link['route']) : $link['url']"
                     :active="isset($link['route']) && request()->routeIs($link['route'])"
-                    class="mobile-nav__link flex min-h-12 items-center rounded-xl px-4 py-4 !text-2xl !font-bold uppercase tracking-[0.08em] hover:bg-rispetto-elevated"
+                    class="mobile-nav__link flex min-h-12 items-center rounded-xl px-4 py-4 !text-xl font-sans font-medium uppercase tracking-[0.08em] hover:bg-rispetto-elevated"
                 >
                     {{ $link['label'] }}
                 </x-site.nav-link>

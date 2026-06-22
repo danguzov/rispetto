@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use BaconQrCode\Common\ErrorCorrectionLevel;
+use BaconQrCode\Encoder\Encoder;
 use BaconQrCode\Renderer\Color\Rgb;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
@@ -58,9 +59,9 @@ final class RispettoQrCode
         }
 
         /** @var array{0: int, 1: int, 2: int} $background */
-        $background = config('site.qr.colors.background', [5, 5, 5]);
+        $background = config('site.qr.colors.background', [255, 255, 255]);
         /** @var array{0: int, 1: int, 2: int} $foreground */
-        $foreground = config('site.qr.colors.foreground', [0, 255, 3]);
+        $foreground = config('site.qr.colors.foreground', [0, 0, 0]);
 
         $fill = Fill::uniformColor(
             new Rgb($background[0], $background[1], $background[2]),
@@ -82,7 +83,7 @@ final class RispettoQrCode
 
         return $writer->writeString(
             $url,
-            encoding: \BaconQrCode\Encoder\Encoder::DEFAULT_BYTE_MODE_ENCODING,
+            encoding: Encoder::DEFAULT_BYTE_MODE_ENCODING,
             ecLevel: ErrorCorrectionLevel::H(),
         );
     }

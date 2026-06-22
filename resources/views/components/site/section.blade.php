@@ -4,11 +4,16 @@
     'reveal' => true,
 ])
 
+@php
+    $shouldReveal = $reveal && $variant !== 'hero';
+@endphp
+
 <{{ $tag }}
-    @if ($reveal) data-site-reveal @endif
+    @if ($shouldReveal) data-site-reveal @endif
     {{ $attributes->class([
-        'site-reveal' => $reveal,
-        'site-section-padding',
+        'site-reveal' => $shouldReveal,
+        'site-section-padding-hero' => $variant === 'hero',
+        'site-section-padding' => $variant !== 'hero',
         'bg-rispetto-bg' => $variant === 'default',
         'bg-rispetto-surface' => $variant === 'muted',
         'bg-rispetto-elevated' => $variant === 'elevated',

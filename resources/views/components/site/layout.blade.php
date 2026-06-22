@@ -3,6 +3,7 @@
     'description' => null,
     'ogImage' => null,
     'robots' => null,
+    'lcpImage' => null,
 ])
 
 <!DOCTYPE html>
@@ -13,6 +14,7 @@
             'description' => $description,
             'ogImage' => $ogImage,
             'robots' => $robots,
+            'lcpImage' => $lcpImage,
         ])
     </head>
     <body class="min-h-screen flex flex-col">

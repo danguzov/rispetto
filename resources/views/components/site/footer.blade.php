@@ -1,5 +1,5 @@
 @php
-    $contact = config('site.contact');
+$contact = config('site.contact');
 @endphp
 
 <footer class="site-reveal bg-rispetto-bg" data-site-reveal>
@@ -27,12 +27,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="mailto:{{ $contact['email'] }}" class="flex items-center gap-3 text-sm text-rispetto-text transition hover:text-rispetto-accent">
-                            <x-site.icon-circle icon="email" />
-                            <span>{{ $contact['email'] }}</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ $contact['maps_link'] }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-sm text-rispetto-text transition hover:text-rispetto-accent">
                             <x-site.icon-circle icon="location" />
                             <span>{{ $contact['address'] }}</span>
@@ -48,63 +42,59 @@
                 </h2>
                 <ul class="flex flex-col gap-3">
                     @foreach (config('site.footer_navigation') as $link)
-                        <li>
-                            <a
-                                href="{{ isset($link['route']) ? route($link['route']) : $link['url'] }}"
-                                class="text-sm text-rispetto-text transition hover:text-rispetto-accent"
-                            >
-                                {{ $link['label'] }}
-                            </a>
-                        </li>
+                    <li>
+                        <a
+                            href="{{ isset($link['route']) ? route($link['route']) : $link['url'] }}"
+                            class="text-sm text-rispetto-text transition hover:text-rispetto-accent">
+                            {{ $link['label'] }}
+                        </a>
+                    </li>
                     @endforeach
                 </ul>
             </div>
 
             {{-- Kolona 4: partneri --}}
             @php
-                $partner = config('site.partner');
-                $partnerLogo = $partner['logo'];
-                $partnerLogoExists = file_exists(public_path($partnerLogo));
-                $partnerLogoIsSvg = str_ends_with(strtolower($partnerLogo), '.svg');
+            $partner = config('site.partner');
+            $partnerLogo = $partner['logo'];
+            $partnerLogoExists = file_exists(public_path($partnerLogo));
+            $partnerLogoIsSvg = str_ends_with(strtolower($partnerLogo), '.svg');
             @endphp
             <div class="flex flex-col items-start gap-5">
                 <h2 class="text-sm font-medium uppercase tracking-wide text-rispetto-text">
                     Partneri sa:
                 </h2>
                 @if ($partnerLogoExists)
-                    <a
-                        href="{{ $partner['url'] }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex h-14 max-w-[11rem] items-center transition opacity-90 hover:opacity-100"
-                        aria-label="{{ $partner['name'] }}"
-                    >
-                        @if ($partnerLogoIsSvg)
-                            <img
-                                src="{{ asset($partnerLogo) }}"
-                                alt="{{ $partner['name'] }}"
-                                class="h-14 w-auto max-w-[11rem] object-contain object-left"
-                                width="200"
-                                height="80"
-                            />
-                        @else
-                            <x-site.optimized-image
-                                :src="$partnerLogo"
-                                :alt="$partner['name']"
-                                class="h-14 w-auto max-w-[11rem] object-contain object-left"
-                                :width="200"
-                                :height="80"
-                                sizes="200px"
-                            />
-                        @endif
-                    </a>
+                <a
+                    href="{{ $partner['url'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex h-14 max-w-[11rem] items-center transition opacity-90 hover:opacity-100"
+                    aria-label="{{ $partner['name'] }}">
+                    @if ($partnerLogoIsSvg)
+                    <img
+                        src="{{ asset($partnerLogo) }}"
+                        alt="{{ $partner['name'] }}"
+                        class="h-14 w-auto max-w-[11rem] object-contain object-left"
+                        width="200"
+                        height="80" />
+                    @else
+                    <x-site.optimized-image
+                        :src="$partnerLogo"
+                        :alt="$partner['name']"
+                        class="h-14 w-auto max-w-[11rem] object-contain object-left"
+                        :width="200"
+                        :height="80"
+                        sizes="200px" />
+                    @endif
+                </a>
                 @else
-                    <div class="flex h-14 w-full max-w-[11rem] items-center justify-center rounded-xl border border-dashed border-rispetto-border/80 px-4">
-                        <span class="text-center text-xs leading-snug text-rispetto-muted">
-                            Logo partnera<br>
-                            <span class="text-rispetto-accent">partner-alideda.svg</span>
-                        </span>
-                    </div>
+                <div class="flex h-14 w-full max-w-[11rem] items-center justify-center rounded-xl border border-dashed border-rispetto-border/80 px-4">
+                    <span class="text-center text-xs leading-snug text-rispetto-muted">
+                        Logo partnera<br>
+                        <span class="text-rispetto-accent">partner-alideda.svg</span>
+                    </span>
+                </div>
                 @endif
             </div>
         </div>
@@ -118,8 +108,7 @@
                     href="{{ config('site.credits.url') }}"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="transition hover:text-rispetto-accent"
-                >
+                    class="transition hover:text-rispetto-accent">
                     {{ config('site.credits.label') }}
                 </a>
             </p>

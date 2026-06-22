@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 final class SiteImage
 {
@@ -17,6 +18,36 @@ final class SiteImage
         return $widths;
     }
 
+    public static function isStoragePath(string $path): bool
+    {
+        return ! str_starts_with($path, 'http') && ! str_starts_with($path, 'images/');
+    }
+
+    /**
+     * Filesystem path for reading/writing image files.
+     */
+    public static function diskPath(string $path): string
+    {
+        if (str_starts_with($path, 'images/')) {
+            return public_path($path);
+        }
+
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        return Storage::disk('public')->path($path);
+    }
+
+    public static function exists(string $path): bool
+    {
+        if (str_starts_with($path, 'http')) {
+            return true;
+        }
+
+        return File::exists(self::diskPath($path));
+    }
+
     /**
      * @param  list<int>  $widths
      */
@@ -28,12 +59,12 @@ final class SiteImage
         foreach ($widths as $width) {
             $variant = self::variantPath($path, $width);
 
-            if (File::exists(self::publicPath($variant))) {
+            if (self::exists($variant)) {
                 $entries[] = self::url($variant).' '.$width.'w';
             }
         }
 
-        if ($entries === [] && File::exists(self::publicPath($path))) {
+        if ($entries === [] && self::exists($path)) {
             $entries[] = self::url($path).' 1x';
         }
 
@@ -51,7 +82,7 @@ final class SiteImage
         foreach ($widths as $width) {
             $webpVariant = self::replaceExtension(self::variantPath($path, $width), 'webp');
 
-            if (File::exists(self::publicPath($webpVariant))) {
+            if (self::exists($webpVariant)) {
                 $entries[] = self::url($webpVariant).' '.$width.'w';
             }
         }
@@ -59,7 +90,7 @@ final class SiteImage
         if ($entries === []) {
             $baseWebp = self::replaceExtension($path, 'webp');
 
-            if (File::exists(self::publicPath($baseWebp))) {
+            if (self::exists($baseWebp)) {
                 $entries[] = self::url($baseWebp).' 1x';
             }
         }
@@ -77,7 +108,51 @@ final class SiteImage
             return asset($path);
         }
 
-        return asset('storage/'.$path);
+        return Storage::disk('public')->url($path);
+    }
+
+    /**
+     * Smallest available variant for use as img src fallback (prefers WebP).
+     *
+     * @param  list<int>|null  $widths
+     */
+    public static function fallbackSrc(string $path, ?array $widths = null): string
+    {
+        $widths ??= self::responsiveWidths();
+
+        foreach ($widths as $width) {
+            $webpVariant = self::replaceExtension(self::variantPath($path, $width), 'webp');
+
+            if (self::exists($webpVariant)) {
+                return self::url($webpVariant);
+            }
+        }
+
+        $baseWebp = self::replaceExtension($path, 'webp');
+
+        if (self::exists($baseWebp)) {
+            return self::url($baseWebp);
+        }
+
+        foreach ($widths as $width) {
+            $variant = self::variantPath($path, $width);
+
+            if (self::exists($variant)) {
+                return self::url($variant);
+            }
+        }
+
+        return self::url($path);
+    }
+
+    public static function mimeTypeForUrl(string $url): ?string
+    {
+        return match (strtolower(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION))) {
+            'webp' => 'image/webp',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            default => null,
+        };
     }
 
     public static function webpUrl(string $path): ?string
@@ -88,16 +163,15 @@ final class SiteImage
 
         $webpPath = self::replaceExtension($path, 'webp');
 
-        return File::exists(self::publicPath($webpPath)) ? self::url($webpPath) : null;
+        return self::exists($webpPath) ? self::url($webpPath) : null;
     }
 
+    /**
+     * @deprecated Use diskPath() for storage files.
+     */
     public static function publicPath(string $path): string
     {
-        if (str_starts_with($path, 'images/')) {
-            return public_path($path);
-        }
-
-        return public_path('storage/'.$path);
+        return self::diskPath($path);
     }
 
     public static function variantPath(string $path, int $width): string

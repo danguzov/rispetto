@@ -5,23 +5,6 @@
 @source '../views/pages';
 @source '../views/partials/site-head.blade.php';
 
-/* ITC Benguiat Std — dodaj .woff2 fajlove u public/fonts/benguiat/ (export iz Figme / font licence) */
-@font-face {
-    font-family: 'ITC Benguiat Std';
-    src: url('/fonts/benguiat/BenguiatStd-Book.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'ITC Benguiat Std';
-    src: url('/fonts/benguiat/BenguiatStd-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
 @theme {
     --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-display: 'ITC Benguiat Std', Georgia, 'Times New Roman', Times, serif;
@@ -78,6 +61,10 @@
 
     /* Jedinstven vertikalni razmak sekcija: lg = 10.25rem (164px), manji breakpointi proporcionalno */
     .site-section-padding {
+        @apply py-12 sm:py-16 md:py-[6.5rem] lg:py-[5.125rem];
+    }
+
+    .site-section-padding-hero {
         @apply py-12 sm:py-16 md:py-[6.5rem] lg:py-[10.25rem];
     }
 
@@ -89,9 +76,17 @@
         @apply lg:max-w-[29.375rem] lg:-translate-x-8 lg:px-6 lg:py-5;
     }
 
+    [data-testimonials-track] {
+        touch-action: pan-y;
+    }
+
+    [data-testimonials-track].is-dragging {
+        @apply cursor-grabbing select-none;
+    }
+
     /* Dostava hero — tanjiri u redu, srednji niže, spora rotacija */
     .delivery-hero-plates {
-        @apply mx-auto flex w-full max-w-[28rem] items-start justify-center gap-3 sm:max-w-[32rem] sm:gap-5 lg:max-w-[36rem] lg:gap-6;
+        @apply mx-auto flex w-full max-w-full items-start justify-center gap-2 sm:max-w-[32rem] sm:gap-5 lg:max-w-[36rem] lg:gap-6;
     }
 
     .delivery-hero-plate-slot {
@@ -99,15 +94,15 @@
     }
 
     .delivery-hero-plate-slot--center {
-        @apply translate-y-4 sm:translate-y-5 lg:translate-y-6;
+        @apply translate-y-3 sm:translate-y-5 lg:translate-y-6;
     }
 
     .delivery-hero-plate {
-        @apply size-[8.5rem] overflow-hidden rounded-full border-4 border-rispetto-bg bg-rispetto-surface shadow-xl sm:size-[10rem] lg:size-[11rem];
+        @apply size-[5.25rem] overflow-hidden rounded-full border-4 border-rispetto-bg bg-rispetto-surface shadow-xl sm:size-[10rem] lg:size-[11rem];
     }
 
     .delivery-hero-plate-slot--center .delivery-hero-plate {
-        @apply size-[9.5rem] sm:size-[11rem] lg:size-[12.5rem];
+        @apply size-[6rem] sm:size-[11rem] lg:size-[12.5rem];
     }
 
     .delivery-hero-plate__spin {
@@ -155,7 +150,7 @@
     }
 
     .category-catalog__trigger {
-        @apply flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border border-rispetto-border bg-rispetto-elevated px-5 py-3.5 text-left text-sm font-semibold uppercase tracking-wide text-rispetto-text transition hover:border-rispetto-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
+        @apply flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border border-rispetto-border bg-rispetto-elevated px-5 py-3.5 text-left font-sans text-sm font-semibold uppercase tracking-wide text-rispetto-text transition hover:border-rispetto-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rispetto-accent;
     }
 
     .category-catalog__chevron {
@@ -239,7 +234,11 @@
     }
 
     .mobile-nav__link {
-        @apply font-display;
+        @apply font-sans text-xl font-medium;
+    }
+
+    .mobile-nav__link:hover {
+        @apply text-rispetto-accent;
     }
 
     .mobile-nav__link[aria-current='page'] {

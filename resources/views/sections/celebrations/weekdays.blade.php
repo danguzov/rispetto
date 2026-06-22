@@ -26,7 +26,7 @@ $image = 'images/site/proslave-radni-dani.jpg';
                 </div>
             </div>
 
-            <div class="order-1 space-y-5 text-center lg:order-2 lg:text-left">
+            <div class="order-1 text-center lg:order-2 lg:text-left">
                 <h2 class="font-display text-3xl font-medium leading-tight text-rispetto-text sm:text-4xl lg:text-5xl">
                     Manje i srednje proslave
                 </h2>

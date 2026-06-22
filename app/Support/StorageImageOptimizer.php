@@ -33,7 +33,7 @@ final class StorageImageOptimizer
             return;
         }
 
-        $sourcePath = SiteImage::publicPath($relativePath);
+        $sourcePath = SiteImage::diskPath($relativePath);
 
         if (! is_file($sourcePath)) {
             return;
@@ -51,7 +51,7 @@ final class StorageImageOptimizer
 
         self::writeWebp(
             $resource,
-            SiteImage::publicPath(SiteImage::replaceExtension($relativePath, 'webp')),
+            SiteImage::diskPath(SiteImage::replaceExtension($relativePath, 'webp')),
             $quality,
         );
 
@@ -63,10 +63,10 @@ final class StorageImageOptimizer
                 continue;
             }
 
-            self::writeRaster($resized, SiteImage::publicPath($variantRelative), $relativePath);
+            self::writeRaster($resized, SiteImage::diskPath($variantRelative), $relativePath);
             self::writeWebp(
                 $resized,
-                SiteImage::publicPath(SiteImage::replaceExtension($variantRelative, 'webp')),
+                SiteImage::diskPath(SiteImage::replaceExtension($variantRelative, 'webp')),
                 $quality,
             );
             imagedestroy($resized);
@@ -92,7 +92,7 @@ final class StorageImageOptimizer
         }
 
         foreach ($paths as $path) {
-            File::delete(SiteImage::publicPath($path));
+            File::delete(SiteImage::diskPath($path));
         }
     }
 
