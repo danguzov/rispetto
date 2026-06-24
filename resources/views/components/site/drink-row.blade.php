@@ -6,8 +6,8 @@
     /** @var \App\Models\Drink $item */
 @endphp
 
-<article {{ $attributes->class(['flex gap-4 border-b border-rispetto-border py-5 last:border-b-0 sm:gap-6']) }}>
-    <div class="aspect-square w-20 shrink-0 overflow-hidden rounded-xl bg-rispetto-surface sm:w-24">
+<article {{ $attributes->class(['flex items-start gap-4 border-b border-rispetto-border py-5 last:border-b-0 sm:gap-6']) }}>
+    <div class="size-20 shrink-0 overflow-hidden rounded-xl bg-rispetto-surface sm:size-24">
         @if ($item->image)
             <x-site.optimized-image
                 :src="$item->image"
