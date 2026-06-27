@@ -168,3 +168,17 @@ test('site scripts include cart defer entry on ordering routes', function (): vo
     expect(SiteScripts::deferEntries())->toContain('resources/js/defer-cart.js')
         ->and(SiteScripts::deferEntries())->toContain('resources/js/defer-catalog.js');
 });
+
+test('site scripts omit cart defer entry when ordering is disabled', function (): void {
+    config(['ordering.enabled' => false]);
+
+    $this->get(route('home'))->assertOk();
+
+    expect(SiteScripts::deferEntries())->not->toContain('resources/js/defer-cart.js')
+        ->and(SiteScripts::deferEntries())->not->toContain('resources/js/defer-ordering-availability.js');
+
+    $this->get(route('menu'))->assertOk();
+
+    expect(SiteScripts::deferEntries())->not->toContain('resources/js/defer-cart.js')
+        ->and(SiteScripts::deferEntries())->toContain('resources/js/defer-catalog.js');
+});

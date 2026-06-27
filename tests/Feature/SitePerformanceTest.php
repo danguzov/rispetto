@@ -182,6 +182,24 @@ test('site scripts defer entries are scoped per route', function (): void {
     ]);
 });
 
+test('site scripts omit ordering entries when ordering is disabled', function (): void {
+    config(['ordering.enabled' => false]);
+
+    $this->get(route('home'))->assertOk();
+
+    expect(SiteScripts::deferEntries())->toBe([
+        'resources/js/defer-reveal.js',
+        'resources/js/defer-carousel.js',
+    ]);
+
+    $this->get(route('menu'))->assertOk();
+
+    expect(SiteScripts::deferEntries())->toBe([
+        'resources/js/defer-reveal.js',
+        'resources/js/defer-catalog.js',
+    ]);
+});
+
 test('home page loads only route scoped defer scripts', function (): void {
     $response = $this->get(route('home'));
 
