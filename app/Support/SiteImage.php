@@ -23,6 +23,15 @@ final class SiteImage
         return ! str_starts_with($path, 'http') && ! str_starts_with($path, 'images/');
     }
 
+    public static function catalogImage(?string $path, string $type): string
+    {
+        if (filled($path) && self::exists($path)) {
+            return $path;
+        }
+
+        return (string) config("site.images.placeholders.{$type}", 'images/site/placeholder-food.jpg');
+    }
+
     /**
      * Filesystem path for reading/writing image files.
      */

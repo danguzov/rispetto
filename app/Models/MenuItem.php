@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\DisplaysCatalogImage;
 use App\Concerns\HasPriceVariants;
 use App\Concerns\OptimizesStorageImage;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -42,6 +43,7 @@ use Illuminate\Validation\ValidationException;
 ])]
 class MenuItem extends Model
 {
+    use DisplaysCatalogImage;
     use HasPriceVariants;
     use OptimizesStorageImage;
 
@@ -90,5 +92,10 @@ class MenuItem extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    protected function catalogImageType(): string
+    {
+        return 'food';
     }
 }

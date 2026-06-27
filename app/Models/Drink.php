@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\DisplaysCatalogImage;
 use App\Concerns\OptimizesStorageImage;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ use Illuminate\Support\Carbon;
 ])]
 class Drink extends Model
 {
+    use DisplaysCatalogImage;
     use OptimizesStorageImage;
 
     /**
@@ -64,5 +66,10 @@ class Drink extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    protected function catalogImageType(): string
+    {
+        return 'drinks';
     }
 }

@@ -8,18 +8,14 @@
 
 <article {{ $attributes->class(['group flex flex-col']) }}>
     <div class="aspect-[4/3] overflow-hidden rounded-xl bg-rispetto-elevated">
-        @if ($item->image)
-            <x-site.optimized-image
-                :src="$item->image"
-                :alt="$item->name"
-                class="size-full object-cover transition duration-300 group-hover:scale-105"
-                :width="480"
-                :height="360"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            />
-        @else
-            <div class="flex size-full items-center justify-center text-xs text-rispetto-muted">Bez slike</div>
-        @endif
+        <x-site.optimized-image
+            :src="$item->displayImage()"
+            :alt="$item->name"
+            class="size-full object-cover transition duration-300 group-hover:scale-105"
+            :width="480"
+            :height="360"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        />
     </div>
 
     <div class="mt-4 flex flex-1 flex-col space-y-2">
@@ -48,5 +44,7 @@
                 {{ $item->displayPrice() }} RSD
             </p>
         @endif
+
+        <x-site.add-to-cart-button :item="$item" compact />
     </div>
 </article>

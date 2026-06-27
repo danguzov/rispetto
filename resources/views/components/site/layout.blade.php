@@ -6,6 +6,10 @@
     'lcpImage' => null,
 ])
 
+@php
+    use App\Support\SiteOrdering;
+@endphp
+
 <!DOCTYPE html>
 <html lang="sr">
     <head>
@@ -17,7 +21,20 @@
             'lcpImage' => $lcpImage,
         ])
     </head>
-    <body class="min-h-screen flex flex-col">
+    <body
+        class="min-h-screen flex flex-col"
+        @if (config('ordering.enabled', true))
+            data-cart-show-url="{{ route('cart.show') }}"
+            data-cart-add-url="{{ route('cart.add') }}"
+            data-cart-update-url="{{ url('/korpa/stavka') }}"
+            data-ordering-accepting="{{ SiteOrdering::isAcceptingOrders() ? 'true' : 'false' }}"
+            data-ordering-message="{{ SiteOrdering::closedMessage() }}"
+        @endif
+    >
+        @if (config('ordering.enabled', true))
+            <x-site.ordering-banner />
+        @endif
+
         <x-site.header />
 
         <main class="flex-1">
@@ -25,5 +42,9 @@
         </main>
 
         <x-site.footer />
+
+        @if (config('ordering.enabled', true))
+            <x-site.cart-variant-dialog />
+        @endif
     </body>
 </html>

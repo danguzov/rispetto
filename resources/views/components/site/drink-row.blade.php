@@ -8,16 +8,14 @@
 
 <article {{ $attributes->class(['flex items-start gap-4 border-b border-rispetto-border py-5 last:border-b-0 sm:gap-6']) }}>
     <div class="size-20 shrink-0 overflow-hidden rounded-xl bg-rispetto-surface sm:size-24">
-        @if ($item->image)
-            <x-site.optimized-image
-                :src="$item->image"
-                :alt="$item->name"
-                class="size-full object-cover"
-                :width="192"
-                :height="192"
-                sizes="(max-width: 640px) 5rem, 6rem"
-            />
-        @endif
+        <x-site.optimized-image
+            :src="$item->displayImage()"
+            :alt="$item->name"
+            class="size-full object-cover"
+            :width="192"
+            :height="192"
+            sizes="(max-width: 640px) 5rem, 6rem"
+        />
     </div>
 
     <div class="min-w-0 flex-1">

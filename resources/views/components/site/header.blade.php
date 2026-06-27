@@ -23,7 +23,7 @@
         <x-site.logo :href="route('home')" class="shrink-0 lg:absolute lg:left-1/2 lg:-translate-x-1/2" />
 
         {{-- Desktop: desna navigacija + telefon --}}
-        <div class="hidden flex-1 items-center justify-end gap-6 lg:flex xl:gap-10">
+        <div class="hidden flex-1 items-center justify-end gap-4 lg:flex xl:gap-6">
             @foreach ($rightLinks as $link)
                 <x-site.nav-link
                     :href="isset($link['route']) ? route($link['route']) : $link['url']"
@@ -34,6 +34,8 @@
                 </x-site.nav-link>
             @endforeach
 
+            <x-site.cart-link />
+
             <a href="{{ config('site.phone_href') }}" class="inline-flex items-center gap-2 text-sm font-medium text-rispetto-text transition hover:text-rispetto-accent">
                 <svg class="size-4 text-rispetto-accent" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
@@ -42,8 +44,11 @@
             </a>
         </div>
 
-        {{-- Mobile: hamburger --}}
-        <button
+        {{-- Mobile: korpa + hamburger --}}
+        <div class="flex items-center gap-2 lg:hidden">
+            <x-site.cart-link />
+
+            <button
             type="button"
             class="inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-rispetto-border text-rispetto-text transition hover:border-rispetto-accent/40 hover:text-rispetto-accent lg:hidden"
             data-mobile-nav-toggle
@@ -58,6 +63,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
         </button>
+        </div>
     </x-site.container>
 </header>
 
@@ -110,7 +116,8 @@
             @endforeach
         </nav>
 
-        <div class="shrink-0 border-t border-rispetto-border px-6 py-6">
+        <div class="shrink-0 border-t border-rispetto-border px-6 py-6 space-y-3">
+            <x-site.cart-link show-label />
             <a
                 href="{{ config('site.phone_href') }}"
                 class="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full border border-rispetto-accent bg-rispetto-accent px-6 py-3 text-base font-bold uppercase tracking-[0.12em] text-rispetto-on-accent transition hover:bg-rispetto-accent-hover"

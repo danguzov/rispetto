@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FilamentUserSeeder::class,
             CategorySeeder::class,
+            RestaurantSettingsSeeder::class,
         ]);
     }
 }

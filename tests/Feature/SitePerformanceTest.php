@@ -162,12 +162,16 @@ test('site scripts defer entries are scoped per route', function (): void {
     expect(SiteScripts::deferEntries())->toBe([
         'resources/js/defer-reveal.js',
         'resources/js/defer-carousel.js',
+        'resources/js/defer-cart.js',
+        'resources/js/defer-ordering-availability.js',
     ]);
 
     $this->get(route('menu'))->assertOk();
 
     expect(SiteScripts::deferEntries())->toBe([
         'resources/js/defer-reveal.js',
+        'resources/js/defer-cart.js',
+        'resources/js/defer-ordering-availability.js',
         'resources/js/defer-catalog.js',
     ]);
 
@@ -184,14 +188,16 @@ test('home page loads only route scoped defer scripts', function (): void {
     $response->assertOk()
         ->assertSee('defer-reveal', false)
         ->assertSee('defer-carousel', false)
+        ->assertSee('defer-cart', false)
         ->assertDontSee('defer-catalog', false);
 });
 
-test('menu page loads catalog defer script only', function (): void {
+test('menu page loads catalog and cart defer scripts', function (): void {
     $response = $this->get(route('menu'));
 
     $response->assertOk()
         ->assertSee('defer-reveal', false)
         ->assertSee('defer-catalog', false)
+        ->assertSee('defer-cart', false)
         ->assertDontSee('defer-carousel', false);
 });

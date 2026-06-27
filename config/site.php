@@ -38,7 +38,7 @@ return [
             ],
             'delivery' => [
                 'title' => 'Dostava',
-                'description' => 'Dostava hrane i lično preuzimanje u restoranu Rispetto. Naručite omiljena jela telefonom ili preko Alidede.',
+                'description' => 'Online poručivanje, lično preuzimanje i dostava hrane u restoranu Rispetto u Batajnici.',
             ],
             'about' => [
                 'title' => 'O nama',
@@ -86,6 +86,10 @@ return [
         'responsive_widths' => [640, 1024, 1280],
         'webp_quality' => 82,
         'jpeg_quality' => 85,
+        'placeholders' => [
+            'food' => 'images/site/placeholder-food.jpg',
+            'drinks' => 'images/site/placeholder-drinks.jpg',
+        ],
     ],
 
     'brand_logo' => 'images/site/rispetto-logo.svg',

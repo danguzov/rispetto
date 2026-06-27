@@ -60,6 +60,10 @@
         @apply rounded-2xl border border-rispetto-border bg-rispetto-surface;
     }
 
+    .site-ordering-banner {
+        @apply border-b border-rispetto-accent/30 bg-rispetto-accent/10;
+    }
+
     /* Jedinstven vertikalni razmak sekcija: lg = 10.25rem (164px), manji breakpointi proporcionalno */
     .site-section-padding {
         @apply py-12 sm:py-16 md:py-[6.5rem] lg:py-[5.125rem];
@@ -278,4 +282,113 @@
     .delivery-hero-plate__spin {
         animation: none;
     }
+}
+
+/* Korpa */
+.site-cart-add--added {
+    @apply border-rispetto-accent/60 bg-rispetto-accent/10 text-rispetto-accent;
+}
+
+.site-cart-add[data-loading='true'] {
+    @apply cursor-wait opacity-70;
+}
+
+.site-cart-link__badge[hidden] {
+    display: none;
+}
+
+.site-cart-dialog {
+    @apply fixed inset-0 z-[70] m-0 max-h-none w-full max-w-none border-0 bg-transparent p-4 backdrop:bg-rispetto-bg/80;
+}
+
+.site-cart-dialog::backdrop {
+    @apply bg-rispetto-bg/80 backdrop-blur-sm;
+}
+
+.site-cart-dialog__panel {
+    @apply mx-auto mt-[10vh] w-full max-w-md rounded-2xl border border-rispetto-border bg-rispetto-surface p-6 shadow-2xl;
+}
+
+.site-cart-variant-option {
+    @apply flex min-h-12 items-center justify-between gap-4 rounded-xl border border-rispetto-border px-4 py-3 text-left transition hover:border-rispetto-accent/50 hover:bg-rispetto-elevated;
+}
+
+.site-cart-variant-option__label {
+    @apply text-base font-medium text-rispetto-text;
+}
+
+.site-cart-variant-option__price {
+    @apply text-sm font-bold text-rispetto-accent;
+}
+
+.site-cart-toast {
+    @apply fixed bottom-6 start-1/2 z-[80] max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-full border border-rispetto-border bg-rispetto-elevated px-5 py-3 text-sm font-medium text-rispetto-text shadow-2xl;
+}
+
+.site-cart-toast[hidden] {
+    display: none;
+}
+
+.site-cart-qty {
+    @apply inline-flex items-center rounded-full border border-rispetto-border bg-rispetto-elevated p-1;
+}
+
+.site-cart-qty__btn {
+    @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-full text-lg font-medium text-rispetto-text transition hover:bg-rispetto-surface hover:text-rispetto-accent;
+}
+
+.site-cart-qty__value {
+    @apply min-w-8 text-center text-base font-semibold tabular-nums text-rispetto-text;
+}
+
+.site-cart-item[data-loading='true'] {
+    @apply pointer-events-none opacity-60;
+}
+
+.site-field {
+    @apply min-h-12 w-full rounded-xl border border-rispetto-border bg-rispetto-elevated px-4 py-3 text-base text-rispetto-text outline-none transition placeholder:text-rispetto-muted focus:border-rispetto-accent/60 focus:ring-2 focus:ring-rispetto-accent/20;
+}
+
+.site-field--textarea {
+    @apply min-h-[6rem] resize-y;
+}
+
+.site-checkout-option {
+    @apply flex min-h-12 cursor-pointer items-start gap-3 rounded-xl border border-rispetto-border bg-rispetto-elevated p-4 transition has-checked:border-rispetto-accent/60 has-checked:bg-rispetto-accent/5;
+}
+
+.site-checkout-option__input {
+    @apply mt-1 size-4 shrink-0 accent-rispetto-accent;
+}
+
+.site-checkout-option__content {
+    @apply flex min-w-0 flex-col gap-1;
+}
+
+.site-checkout-option__title {
+    @apply text-sm font-semibold text-rispetto-text;
+}
+
+.site-checkout-option__text {
+    @apply text-sm text-rispetto-muted;
+}
+
+.site-order-timeline {
+    @apply space-y-0;
+}
+
+.site-order-timeline__item {
+    @apply relative flex gap-4 border-s border-rispetto-border pb-8 ps-6 last:border-transparent last:pb-0;
+}
+
+.site-order-timeline__marker {
+    @apply absolute -start-[0.4375rem] top-1 size-3.5 rounded-full border-2 border-rispetto-border bg-rispetto-bg;
+}
+
+.site-order-timeline__item--complete .site-order-timeline__marker {
+    @apply border-rispetto-accent bg-rispetto-accent;
+}
+
+.site-order-timeline__item--current .site-order-timeline__marker {
+    @apply border-rispetto-accent bg-rispetto-bg ring-4 ring-rispetto-accent/20;
 }

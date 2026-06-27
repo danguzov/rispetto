@@ -10,13 +10,13 @@ Arhitektura: korpa na postojećem sajtu + Filament admin za kuhinju.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         rispetto.rs (isti Laravel projekat)               │
+│                         rispetto.rs (isti Laravel projekat)             │
 ├──────────────────────────────┬──────────────────────────────────────────┤
 │     JAVNI SAJT (kupac)       │         FILAMENT ADMIN (operater)        │
 │                              │                                          │
 │  /jelovnik  → Dodaj u korpu  │  /admin/kuhinja  → Live board (tablet)   │
 │  /korpa     → Pregled korpe  │  /admin/porudzbine → Istorija, detalji   │
-│  /narucivanje → Checkout     │  /admin (dashboard) → Toggle ON/OFF        │
+│  /narucivanje → Checkout     │  /admin (dashboard) → Toggle ON/OFF      │
 │  /porudzbina/{token} → Status│                                          │
 │                              │                                          │
 │  Blade + site.css + Alpine   │  Filament + custom KitchenBoard page     │
@@ -25,7 +25,7 @@ Arhitektura: korpa na postojećem sajtu + Filament admin za kuhinju.
                                       ▼
                     ┌─────────────────────────────────────┐
                     │  Laravel Reverb (WebSocket, besplatno) │
-                    │  + Redis + Queue worker                │
+                    │  + Redis + Queue worker             │ 
                     └─────────────────────────────────────┘
 ```
 

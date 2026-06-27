@@ -126,3 +126,31 @@ test('menu item image upload triggers storage optimization', function (): void {
     StorageImageOptimizer::deleteVariants($relativePath);
     File::delete($sourcePath);
 })->group('gd');
+
+test('catalog image falls back to configured placeholders', function (): void {
+    expect(SiteImage::catalogImage(null, 'food'))
+        ->toBe('images/site/placeholder-food.jpg')
+        ->and(SiteImage::catalogImage('', 'drinks'))
+        ->toBe('images/site/placeholder-drinks.jpg')
+        ->and(SiteImage::catalogImage('missing/menu-item.jpg', 'food'))
+        ->toBe('images/site/placeholder-food.jpg');
+});
+
+test('menu item without image uses food placeholder path', function (): void {
+    $category = Category::query()->create([
+        'name' => 'Paste',
+        'slug' => 'paste-'.uniqid(),
+        'type' => ProductType::Food,
+        'sort_order' => 0,
+    ]);
+
+    $item = MenuItem::query()->create([
+        'category_id' => $category->id,
+        'name' => 'Bez slike',
+        'price' => 890,
+        'sort_order' => 0,
+        'is_active' => true,
+    ]);
+
+    expect($item->displayImage())->toBe('images/site/placeholder-food.jpg');
+});

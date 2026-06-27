@@ -1,5 +1,7 @@
 @php
-$heroImages = [
+    use App\Support\SiteOrdering;
+
+    $heroImages = [
 [
 'src' => 'images/site/dostava-hero-1.jpg',
 'alt' => 'Predjelo u restoranu Rispetto',
@@ -25,8 +27,25 @@ $heroImages = [
                 </h1>
 
                 <p class="site-subheading mx-auto max-w-xl lg:mx-0">
-                    Želimo da uživate u našim jelima gde god da se nalazite, zato smo organizovali dostavu kroz saradnju sa pouzdanim partnerom.
+                    Želimo da uživate u našim jelima gde god da se nalazite — poručite online ili nas kontaktirajte za lično preuzimanje.
                 </p>
+
+                @if (SiteOrdering::isEnabled())
+                    <div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+                        <a
+                            href="{{ route('menu') }}"
+                            class="site-btn-primary min-h-12 px-8 py-4 text-xs uppercase tracking-[0.2em]"
+                        >
+                            Poruči online
+                        </a>
+
+                        @unless (SiteOrdering::isAcceptingOrders())
+                            <p class="text-sm text-rispetto-muted">
+                                {{ SiteOrdering::closedMessage() }}
+                            </p>
+                        @endunless
+                    </div>
+                @endif
             </div>
 
             <div class="delivery-hero-plates">

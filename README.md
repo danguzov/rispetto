@@ -6,7 +6,14 @@
 - Lozinka: `password` (promeni u `.env` → `FILAMENT_ADMIN_*`)
 - Seed: `php artisan db:seed --class=FilamentUserSeeder`
 
-Laravel aplikacija za restoran **Rispetto**: jelovnik, piće, admin panel i javni sajt.
+Laravel aplikacija za restoran **Rispetto**: jelovnik, piće, admin panel, online poručivanje i javni sajt.
+
+## Online poručivanje
+
+- Kupac: `/jelovnik` → korpa → `/narucivanje` → `/porudzbina/{token}`
+- Admin: `/admin/kuhinja` (kitchen board), `/admin/porudzbine`
+- Produkcija: [docs/ORDERING-DEPLOY.md](docs/ORDERING-DEPLOY.md)
+- Plan: [docs/ORDERING-SYSTEM-PLAN.md](docs/ORDERING-SYSTEM-PLAN.md)
 
 ## Stack
 

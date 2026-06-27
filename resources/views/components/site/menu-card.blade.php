@@ -8,15 +8,13 @@
 
 <article {{ $attributes->class(['site-card']) }}>
     <div class="aspect-[4/3] bg-rispetto-surface sm:aspect-[16/10]">
-        @if ($item->image)
         <x-site.optimized-image
-            :src="$item->image"
+            :src="$item->displayImage()"
             :alt="$item->name"
             class="size-full object-cover"
             :width="640"
             :height="400"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        @endif
     </div>
     <div class="space-y-3 p-5 sm:p-6">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
