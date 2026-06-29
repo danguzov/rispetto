@@ -60,8 +60,12 @@
                                         <p class="text-base font-medium text-rispetto-text">{{ $step['label'] }}</p>
                                         <p class="mt-1 text-sm text-rispetto-muted">{{ $step['customer'] }}</p>
                                         @if ($isCurrent && $order->estimated_ready_at && in_array($order->status, [OrderStatus::Accepted, OrderStatus::Preparing, OrderStatus::Ready, OrderStatus::OutForDelivery], true))
-                                            <p class="mt-2 text-sm font-medium text-rispetto-accent" data-order-eta>
-                                                Spremno oko {{ $order->estimated_ready_at->format('H:i') }}
+                                            <p
+                                                class="mt-3 text-lg font-semibold text-rispetto-accent"
+                                                data-order-countdown
+                                                data-ready-at="{{ $order->estimated_ready_at->toIso8601String() }}"
+                                            >
+                                                Spremno za ~{{ max(0, (int) now()->diffInMinutes($order->estimated_ready_at, false)) }} min
                                             </p>
                                         @endif
                                     </div>
@@ -123,10 +127,33 @@
                     </p>
                 </div>
 
-                <p class="text-center text-sm text-rispetto-muted">
-                    Link za praćenje:
-                    <span class="break-all text-rispetto-text">{{ route('order.tracking', $order->tracking_token) }}</span>
-                </p>
+                <div class="site-panel space-y-3 p-6 text-center sm:text-left">
+                    <h2 class="text-base font-medium text-rispetto-text">Link za praćenje</h2>
+                    <p class="text-sm text-rispetto-muted">
+                        Sačuvajte ovaj link — možete pratiti status porudžbine bez prijave. Link stiže i na mejl kada restoran prihvati porudžbinu.
+                    </p>
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+                        <input
+                            type="text"
+                            readonly
+                            value="{{ route('order.tracking', $order->tracking_token) }}"
+                            class="min-h-12 w-full flex-1 rounded-xl border border-rispetto-border bg-rispetto-bg px-4 py-3 text-sm text-rispetto-text select-all"
+                            data-order-tracking-link
+                            onfocus="this.select()"
+                            aria-label="Link za praćenje porudžbine"
+                        >
+                        <button
+                            type="button"
+                            class="site-btn-secondary min-h-12 shrink-0 px-5"
+                            data-order-copy-link
+                        >
+                            Kopiraj link
+                        </button>
+                    </div>
+                    <p class="hidden text-sm text-rispetto-accent" data-order-copy-feedback role="status">
+                        Link je kopiran.
+                    </p>
+                </div>
 
                 @if (filled(config('ordering.webpush.vapid_public_key')))
                     <div class="flex justify-center">

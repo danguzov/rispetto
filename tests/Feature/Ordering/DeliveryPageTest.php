@@ -21,8 +21,9 @@ beforeEach(function (): void {
 test('delivery page shows online ordering cta when ordering is enabled', function (): void {
     $this->get(route('delivery'))
         ->assertOk()
+        ->assertSee('Dostava')
         ->assertSee('Poruči online')
-        ->assertSee('Pogledaj jelovnik')
+        ->assertDontSee('Naruči preko Alidede')
         ->assertSee(route('menu'), false);
 });
 

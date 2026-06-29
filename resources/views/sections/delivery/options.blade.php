@@ -5,46 +5,36 @@
 
     if (SiteOrdering::isEnabled()) {
         $options[] = [
-            'image' => 'images/site/dostava-online.jpg',
-            'image_alt' => 'Online poručivanje hrane iz restorana Rispetto',
-            'title' => 'Poruči online',
+            'image' => 'images/site/dostava.jpeg',
+            'image_width' => 704,
+            'image_height' => 1372,
+            'image_alt' => 'Poručivanje hrane online preko mobilnog telefona u restoranu Rispetto',
+            'title' => 'Dostava',
             'description' => 'Izaberite jela sa jelovnika, dodajte u korpu i završite porudžbinu za nekoliko minuta. Dostupno za lično preuzimanje i dostavu na adresu.',
             'href' => route('menu'),
-            'label' => 'Pogledaj jelovnik',
+            'label' => 'Poruči online',
             'icon' => 'cart',
             'external' => false,
         ];
     }
 
-    $options = array_merge($options, [
-        [
-            'image' => 'images/site/dostava-pickup.jpg',
-            'image_alt' => 'Lično preuzimanje hrane u restoranu Rispetto',
-            'title' => 'Lično preuzimanje',
-            'description' => 'Poručite online i preuzmite jela u restoranu, ili nas pozovite telefonom ako vam je lakše.',
-            'href' => config('site.phone_href'),
-            'label' => 'Pozovite nas',
-            'icon' => 'phone',
-            'external' => false,
-        ],
-        [
-            'image' => 'images/site/dostava-alideda.jpg',
-            'image_alt' => 'Dostava preko Alideda platforme',
-            'title' => 'Naruči preko Alidede',
-            'description' => 'Alternativno, posetite Alideda platformu ili mobilnu aplikaciju i naručite omiljena jela za brzu isporuku.',
-            'href' => config('site.partner.url'),
-            'label' => 'Alideda platforma',
-            'icon' => 'delivery',
-            'external' => true,
-        ],
-    ]);
+    $options[] = [
+        'image' => 'images/site/dostava-pickup.jpg',
+        'image_alt' => 'Lično preuzimanje hrane u restoranu Rispetto',
+        'title' => 'Lično preuzimanje',
+        'description' => 'Poručite online i preuzmite jela u restoranu, ili nas pozovite telefonom ako vam je lakše.',
+        'href' => config('site.phone_href'),
+        'label' => 'Pozovite nas',
+        'icon' => 'phone',
+        'external' => false,
+    ];
 @endphp
 
 <x-site.section>
     <x-site.container>
         <div @class([
             'grid gap-6 sm:gap-8 lg:gap-10',
-            count($options) >= 3 ? 'md:grid-cols-2 xl:grid-cols-3' : 'lg:grid-cols-2',
+            count($options) > 1 ? 'lg:grid-cols-2' : 'max-w-2xl',
         ])>
             @foreach ($options as $option)
                 <article class="delivery-option-card">
@@ -53,10 +43,10 @@
                             <x-site.optimized-image
                                 :src="$option['image']"
                                 :alt="$option['image_alt']"
-                                class="size-full object-cover"
-                                :width="720"
-                                :height="450"
-                                sizes="(max-width: 1024px) 100vw, 33vw"
+                                class="size-full object-cover object-center"
+                                :width="$option['image_width'] ?? 720"
+                                :height="$option['image_height'] ?? 450"
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         @else
                             <div class="flex size-full min-h-[12rem] items-center justify-center p-6 text-center">
@@ -73,9 +63,13 @@
                             {{ $option['title'] }}
                         </h2>
 
-                        <p class="mt-4 flex-1 text-base leading-relaxed text-rispetto-muted sm:mt-5 sm:text-lg">
-                            {{ $option['description'] }}
-                        </p>
+                        @if (! empty($option['description'] ?? null))
+                            <p class="mt-4 flex-1 text-base leading-relaxed text-rispetto-muted sm:mt-5 sm:text-lg">
+                                {{ $option['description'] }}
+                            </p>
+                        @else
+                            <div class="flex-1"></div>
+                        @endif
 
                         <a
                             href="{{ $option['href'] }}"

@@ -22,6 +22,7 @@ export default defineConfig({
                 'resources/js/defer-order-push.js',
                 'resources/js/defer-ordering-availability.js',
                 'resources/js/passkeys.js',
+                'resources/js/dashboard.js',
             ],
             refresh: true,
             fonts: [

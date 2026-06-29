@@ -1,0 +1,12 @@
+@theme {
+    --color-dashboard-bg: #f3f4f6;
+    --color-dashboard-muted-bg: #f9fafb;
+    --color-dashboard-border: #e5e7eb;
+    --color-dashboard-text: #111827;
+    --color-dashboard-muted: #6b7280;
+    --color-dashboard-primary: #006837;
+    --color-dashboard-primary-hover: #005a2e;
+    --color-dashboard-primary-soft: #ecfdf3;
+    --color-dashboard-warning-bg: #fff7ed;
+    --color-dashboard-warning-text: #9a3412;
+}

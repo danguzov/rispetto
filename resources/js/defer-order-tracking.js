@@ -7,6 +7,77 @@ const activeStatuses = new Set([
     'out_for_delivery',
 ]);
 
+let countdownInterval = null;
+
+function formatCountdownLabel(isoString) {
+    if (! isoString) {
+        return null;
+    }
+
+    const target = new Date(isoString).getTime();
+
+    if (Number.isNaN(target)) {
+        return null;
+    }
+
+    const diffMs = target - Date.now();
+
+    if (diffMs <= 0) {
+        return 'Spremno uskoro';
+    }
+
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (minutes >= 1) {
+        return `Spremno za ~${minutes} min`;
+    }
+
+    return `Spremno za ${seconds} sek`;
+}
+
+function updateCountdownElements(root) {
+    root.querySelectorAll('[data-order-countdown]').forEach((element) => {
+        const readyAt = element.dataset.readyAt;
+
+        if (! readyAt) {
+            return;
+        }
+
+        const label = formatCountdownLabel(readyAt);
+
+        if (label) {
+            element.textContent = label;
+        }
+    });
+}
+
+function startCountdown(root) {
+    if (countdownInterval) {
+        window.clearInterval(countdownInterval);
+    }
+
+    updateCountdownElements(root);
+
+    if (! root.querySelector('[data-order-countdown]')) {
+        return;
+    }
+
+    countdownInterval = window.setInterval(() => updateCountdownElements(root), 1000);
+}
+
+function countdownMarkup(data) {
+    if (
+        ! activeStatuses.has(data.status)
+        || ! data.estimated_ready_at
+    ) {
+        return '';
+    }
+
+    return `<p class="mt-3 text-lg font-semibold text-rispetto-accent" data-order-countdown data-ready-at="${data.estimated_ready_at}">${formatCountdownLabel(data.estimated_ready_at) ?? ''}</p>`;
+}
+
 function renderTimeline(root, data) {
     const statusContainer = root.querySelector('[data-order-tracking-status]');
 
@@ -34,11 +105,7 @@ function renderTimeline(root, data) {
             isCurrent ? 'site-order-timeline__item--current' : '',
         ].filter(Boolean).join(' ');
 
-        const eta = isCurrent
-            && data.estimated_ready_at_time
-            && activeStatuses.has(data.status)
-            ? `<p class="mt-2 text-sm font-medium text-rispetto-accent" data-order-eta>Spremno oko ${data.estimated_ready_at_time}</p>`
-            : '';
+        const eta = isCurrent ? countdownMarkup(data) : '';
 
         return `
             <li class="${classes}" data-timeline-index="${index}">
@@ -53,6 +120,7 @@ function renderTimeline(root, data) {
     }).join('');
 
     statusContainer.innerHTML = `<ol class="site-order-timeline" data-order-timeline>${items}</ol>`;
+    startCountdown(root);
 }
 
 async function refreshTracking(root) {
@@ -76,12 +144,45 @@ async function refreshTracking(root) {
     renderTimeline(root, data);
 }
 
+function setupCopyLink(root) {
+    const copyButton = root.querySelector('[data-order-copy-link]');
+    const linkInput = root.querySelector('[data-order-tracking-link]');
+    const feedback = root.querySelector('[data-order-copy-feedback]');
+
+    if (! copyButton || ! linkInput) {
+        return;
+    }
+
+    copyButton.addEventListener('click', async () => {
+        const url = linkInput.value;
+
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(url);
+            } else {
+                linkInput.select();
+                document.execCommand('copy');
+            }
+
+            if (feedback) {
+                feedback.classList.remove('hidden');
+                window.setTimeout(() => feedback.classList.add('hidden'), 2500);
+            }
+        } catch {
+            linkInput.select();
+        }
+    });
+}
+
 function bootOrderTracking() {
     const root = document.querySelector('[data-order-tracking]');
 
     if (! root) {
         return;
     }
+
+    setupCopyLink(root);
+    startCountdown(root);
 
     const token = root.dataset.trackingToken;
     const echo = initEcho();

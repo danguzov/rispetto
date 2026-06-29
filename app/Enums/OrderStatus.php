@@ -25,9 +25,32 @@ enum OrderStatus: string
         };
     }
 
+    public function dashboardLabel(): string
+    {
+        return match ($this) {
+            self::Pending => 'Čeka potvrdu',
+            self::Accepted => 'Potvrđeno',
+            self::Preparing => 'U pripremi',
+            self::Ready => 'Spremno',
+            self::OutForDelivery => 'U dostavi',
+            self::Completed => 'Isporučeno',
+            self::Cancelled => 'Odbijeno',
+        };
+    }
+
     public function isActive(): bool
     {
         return ! in_array($this, [self::Completed, self::Cancelled], true);
+    }
+
+    public function isInKitchenProcess(): bool
+    {
+        return in_array($this, [
+            self::Accepted,
+            self::Preparing,
+            self::Ready,
+            self::OutForDelivery,
+        ], true);
     }
 
     public function filamentColor(): string

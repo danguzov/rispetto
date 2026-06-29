@@ -19,6 +19,13 @@ return [
 
     'eta_presets' => [15, 30, 45, 60, 90],
 
+    'auto_status' => [
+        'enabled' => env('ORDERING_AUTO_STATUS', true),
+        'preparing_after_percent' => 15,
+        'preparing_min_seconds' => 60,
+        'complete_after_ready_minutes' => 2,
+    ],
+
     'webpush' => [
         'vapid_subject' => env('VAPID_SUBJECT', 'mailto:rispettoristorante@office.com'),
         'vapid_public_key' => env('VAPID_PUBLIC_KEY'),

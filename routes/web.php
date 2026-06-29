@@ -45,8 +45,6 @@ Route::get('/porudzbina/{token}', [OrderTrackingController::class, 'show'])->nam
 Route::get('/porudzbina/{token}/status', [OrderTrackingController::class, 'status'])->name('order.tracking.status');
 Route::post('/porudzbina/{token}/push', [OrderPushSubscriptionController::class, 'store'])->name('order.push.subscribe');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-});
+require __DIR__.'/dashboard.php';
 
 require __DIR__.'/settings.php';

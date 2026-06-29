@@ -1,0 +1,83 @@
+@layer components {
+    .dashboard-shell {
+        @apply min-h-screen bg-dashboard-bg text-dashboard-text antialiased;
+    }
+
+    .dashboard-card {
+        @apply rounded-2xl border border-dashboard-border bg-white shadow-sm;
+    }
+
+    .dashboard-metric-card {
+        @apply flex min-h-[5.5rem] flex-1 items-center gap-4 rounded-2xl border border-dashboard-border bg-white px-5 py-4 shadow-sm;
+    }
+
+    .dashboard-sidebar-link {
+        @apply flex min-h-12 w-full items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-base font-medium text-dashboard-text transition-colors;
+    }
+
+    .dashboard-sidebar-link-active {
+        @apply bg-dashboard-primary text-white;
+    }
+
+    .dashboard-sidebar-badge {
+        @apply inline-flex min-h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-semibold tabular-nums;
+    }
+
+    .dashboard-btn {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary;
+    }
+
+    .dashboard-btn-primary {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary bg-dashboard-primary text-white hover:bg-dashboard-primary-hover;
+    }
+
+    .dashboard-btn-danger {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border border-red-200 bg-white text-red-600 hover:bg-red-50;
+    }
+
+    .dashboard-btn-ghost {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border border-dashboard-border bg-white text-dashboard-text hover:bg-dashboard-muted-bg;
+    }
+
+    .dashboard-btn-warning {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border-2 border-amber-400 bg-white text-amber-700 hover:bg-amber-50;
+    }
+
+    .dashboard-input {
+        @apply min-h-12 w-full rounded-xl border border-dashboard-border bg-white px-4 py-3 text-base text-dashboard-text placeholder:text-dashboard-muted focus:border-dashboard-primary focus:outline-none focus:ring-2 focus:ring-dashboard-primary/20;
+    }
+
+    .dashboard-order-card {
+        @apply flex flex-col rounded-2xl border border-dashboard-border bg-white p-5 shadow-sm transition-shadow hover:shadow-md;
+    }
+
+    .dashboard-order-card-active {
+        border-width: 0.1875rem;
+        @apply border-dashboard-primary;
+        animation: dashboard-order-border-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes dashboard-order-border-pulse {
+        0%,
+        100% {
+            border-color: var(--color-dashboard-primary);
+            box-shadow: 0 0 0 0 rgb(0 104 55 / 0.35);
+        }
+
+        50% {
+            border-color: rgb(0 104 55 / 0.5);
+            box-shadow: 0 0 0 0.25rem rgb(0 104 55 / 0.18);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dashboard-order-card-active {
+            animation: none;
+            @apply ring-2 ring-dashboard-primary/35;
+        }
+    }
+
+    .font-dashboard-display {
+        font-family: 'ITC Benguiat Std', Georgia, 'Times New Roman', serif;
+    }
+}

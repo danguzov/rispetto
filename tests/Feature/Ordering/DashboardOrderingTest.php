@@ -2,9 +2,7 @@
 
 use App\Enums\FulfillmentType;
 use App\Enums\OrderStatus;
-use App\Filament\Pages\KitchenBoard;
-use App\Filament\Resources\Orders\Pages\ListOrders;
-use App\Filament\Widgets\Ordering\AcceptingOrdersWidget;
+use App\Livewire\Dashboard\OrderIndex;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderStatusLog;
@@ -28,7 +26,7 @@ beforeEach(function (): void {
     app(RestaurantSettingsService::class)->clearCache();
 });
 
-function createFilamentTestOrder(array $attributes = []): Order
+function createDashboardTestOrder(array $attributes = []): Order
 {
     $order = Order::query()->create(array_merge([
         'order_number' => 'R-'.now()->format('Ymd').'-0099',
@@ -77,46 +75,40 @@ test('filament echo is configured when broadcasting uses reverb', function (): v
         ->and(config('filament.broadcasting.echo.authEndpoint'))->toBe('/broadcasting/auth');
 });
 
-test('guest cannot access filament orders list', function (): void {
-    $this->get(route('filament.admin.resources.porudzbine.index'))
+test('guest cannot access dashboard orders', function (): void {
+    $this->get(route('dashboard.orders.index'))
         ->assertRedirect();
 });
 
-test('authenticated admin can access orders list and kitchen board', function (): void {
+test('authenticated user can access dashboard orders', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('filament.admin.resources.porudzbine.index'))
-        ->assertOk();
-
-    $this->actingAs($user)
-        ->get(route('filament.admin.pages.kuhinja'))
+        ->get(route('dashboard.orders.index'))
         ->assertOk();
 });
 
-test('kitchen board accepts pending order with custom eta input', function (): void {
+test('dashboard accepts pending order with custom eta input', function (): void {
     $user = User::factory()->create();
-    $order = createFilamentTestOrder();
+    $order = createDashboardTestOrder();
 
     Livewire::actingAs($user)
-        ->test(KitchenBoard::class)
+        ->test(OrderIndex::class)
         ->set('customEtaByOrder.'.$order->id, 60)
-        ->call('acceptOrderWithCustomEta', $order->id)
-        ->assertNotified();
+        ->call('acceptOrderWithCustomEta', $order->id);
 
     $order->refresh();
 
     expect($order->status)->toBe(OrderStatus::Accepted);
 });
 
-test('kitchen board accepts pending order with eta', function (): void {
+test('dashboard accepts pending order with eta', function (): void {
     $user = User::factory()->create();
-    $order = createFilamentTestOrder();
+    $order = createDashboardTestOrder();
 
     Livewire::actingAs($user)
-        ->test(KitchenBoard::class)
-        ->call('acceptOrder', $order->id, 45)
-        ->assertNotified();
+        ->test(OrderIndex::class)
+        ->call('acceptOrder', $order->id, 45);
 
     $order->refresh();
 
@@ -124,23 +116,28 @@ test('kitchen board accepts pending order with eta', function (): void {
         ->and($order->estimated_ready_at)->not->toBeNull();
 });
 
-test('accepting orders widget toggles restaurant settings', function (): void {
+test('dashboard toggles accepting orders', function (): void {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
-        ->test(AcceptingOrdersWidget::class)
-        ->assertSet('data.accepting_orders', true)
-        ->set('data.accepting_orders', false)
-        ->assertNotified();
+        ->test(OrderIndex::class)
+        ->call('toggleAcceptingOrders');
 
     expect(app(RestaurantSettingsService::class)->acceptingOrders())->toBeFalse();
-});
-
-test('orders list shows created order', function (): void {
-    $user = User::factory()->create();
-    $order = createFilamentTestOrder();
 
     Livewire::actingAs($user)
-        ->test(ListOrders::class)
-        ->assertCanSeeTableRecords([$order]);
+        ->test(OrderIndex::class)
+        ->call('toggleAcceptingOrders');
+
+    expect(app(RestaurantSettingsService::class)->acceptingOrders())->toBeTrue();
+});
+
+test('dashboard order index shows created order', function (): void {
+    $user = User::factory()->create();
+    $order = createDashboardTestOrder();
+
+    Livewire::actingAs($user)
+        ->test(OrderIndex::class)
+        ->assertSee($order->customer_name)
+        ->assertSee('Odbij');
 });

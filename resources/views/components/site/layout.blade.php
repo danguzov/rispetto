@@ -31,11 +31,13 @@
             data-ordering-message="{{ SiteOrdering::closedMessage() }}"
         @endif
     >
-        @if (config('ordering.enabled', true))
-            <x-site.ordering-banner />
-        @endif
+        <div class="site-sticky-header sticky top-0 z-50">
+            @if (config('ordering.enabled', true))
+                <x-site.ordering-banner />
+            @endif
 
-        <x-site.header />
+            <x-site.header />
+        </div>
 
         <main class="flex-1">
             {{ $slot }}

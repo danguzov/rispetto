@@ -60,6 +60,10 @@
         @apply rounded-2xl border border-rispetto-border bg-rispetto-surface;
     }
 
+    .site-sticky-header {
+        @apply bg-rispetto-bg/95 backdrop-blur-md;
+    }
+
     .site-ordering-banner {
         @apply border-b border-rispetto-accent/30 bg-rispetto-accent/10;
     }

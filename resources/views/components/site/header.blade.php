@@ -4,7 +4,7 @@
     $allLinks = array_merge($leftLinks, $rightLinks);
 @endphp
 
-<header class="sticky top-0 z-50 bg-rispetto-bg/95 backdrop-blur-md">
+<header class="bg-rispetto-bg/95 backdrop-blur-md">
     <x-site.container tag="nav" class="relative flex h-20 items-center justify-between gap-4 lg:h-24" aria-label="Glavna navigacija">
         {{-- Desktop: leva navigacija --}}
         <div class="hidden flex-1 items-center gap-6 lg:flex xl:gap-10">

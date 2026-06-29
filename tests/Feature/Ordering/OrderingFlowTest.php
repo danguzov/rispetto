@@ -4,7 +4,7 @@ use App\Enums\FulfillmentType;
 use App\Enums\OrderStatus;
 use App\Enums\ProductType;
 use App\Events\Ordering\OrderCreated;
-use App\Filament\Pages\KitchenBoard;
+use App\Livewire\Dashboard\OrderIndex;
 use App\Models\Category;
 use App\Models\MenuItem;
 use App\Models\Order;
@@ -95,9 +95,8 @@ test('full ordering flow from cart to completed pickup order', function (): void
         ->assertJsonPath('status', OrderStatus::Pending->value);
 
     Livewire::actingAs($admin)
-        ->test(KitchenBoard::class)
-        ->call('acceptOrder', $order->id, 40)
-        ->assertNotified();
+        ->test(OrderIndex::class)
+        ->call('acceptOrder', $order->id, 40);
 
     $order->refresh();
 
@@ -105,7 +104,7 @@ test('full ordering flow from cart to completed pickup order', function (): void
         ->and($order->estimated_ready_at)->not->toBeNull();
 
     Livewire::actingAs($admin)
-        ->test(KitchenBoard::class)
+        ->test(OrderIndex::class)
         ->call('markPreparing', $order->id)
         ->call('markReady', $order->id)
         ->call('completeOrder', $order->id);
@@ -144,7 +143,7 @@ test('full delivery ordering flow through kitchen board', function (): void {
     $order = Order::query()->firstOrFail();
 
     Livewire::actingAs($admin)
-        ->test(KitchenBoard::class)
+        ->test(OrderIndex::class)
         ->call('acceptOrder', $order->id, 50)
         ->call('markPreparing', $order->id)
         ->call('markReady', $order->id)
