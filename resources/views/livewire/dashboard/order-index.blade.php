@@ -3,105 +3,34 @@
     use App\Enums\OrderStatus;
 
     $sidebarItems = [
-        'today' => ['label' => 'Sve narudžbine', 'icon' => 'grid'],
-        'pending' => ['label' => 'Čeka potvrdu', 'icon' => 'clock'],
-        'preparing' => ['label' => 'U pripremi', 'icon' => 'pot'],
+        'new' => ['label' => 'Nove porudžbine', 'icon' => 'inbox'],
+        'today' => ['label' => 'Sve narudžbine', 'icon' => 'layers'],
+        'pending' => ['label' => 'Čeka potvrdu', 'icon' => 'bell'],
+        'preparing' => ['label' => 'U pripremi', 'icon' => 'chef-hat'],
         'delivery' => ['label' => 'U dostavi', 'icon' => 'bike'],
-        'pickup' => ['label' => 'Lično preuzimanje', 'icon' => 'walk'],
-        'completed' => ['label' => 'Isporučeno', 'icon' => 'check'],
-        'cancelled' => ['label' => 'Odbijeno', 'icon' => 'x'],
+        'pickup' => ['label' => 'Lično preuzimanje', 'icon' => 'user'],
+        'completed' => ['label' => 'Isporučeno', 'icon' => 'check-circle'],
+        'cancelled' => ['label' => 'Odbijeno', 'icon' => 'x-circle'],
     ];
 @endphp
 
 <div
     class="space-y-5 lg:space-y-6"
     wire:poll.3s="refreshOrders"
-    x-data="createKitchenAlarm()"
-    x-init="
-        syncPendingAlarm(@js($pendingCount));
-        $wire.on('kitchen-pending-updated', (event) => {
-            const count = event?.pendingCount ?? $wire.pendingCount;
-            syncPendingAlarm(count);
-            if (Number(count) > 0) playKitchenBeep();
-        });
-        $wire.on('kitchen-new-order', () => {
-            syncPendingAlarm($wire.pendingCount);
-            playKitchenBeep();
-        });
-    "
-    x-effect="syncPendingAlarm($wire.pendingCount)"
+    x-data="{ sidebarOpen: false }"
     @toggle-dashboard-sidebar.window="sidebarOpen = ! sidebarOpen"
-    @click="unlockAudio()"
-    @keydown.window="unlockAudio()"
 >
-    <div
-        x-show="! audioUnlocked"
-        x-cloak
-        class="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-base text-amber-900"
-    >
-        Dodirnite ekran da uključite zvučno obaveštenje za nove porudžbine.
-    </div>
-
     @if (session('dashboard_message'))
         <div class="rounded-2xl border border-dashboard-primary/30 bg-dashboard-primary-soft px-4 py-3 text-base text-dashboard-primary">
             {{ session('dashboard_message') }}
         </div>
     @endif
 
-    {{-- Metrike --}}
-    <div class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 xl:gap-4">
-        <div class="dashboard-metric-card">
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-dashboard-muted-bg text-dashboard-primary">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-            </span>
-            <div>
-                <p class="text-2xl font-bold tabular-nums text-dashboard-text">{{ $stats['today'] }}</p>
-                <p class="text-sm text-dashboard-muted">Narudžbine danas</p>
-            </div>
-        </div>
-        <div class="dashboard-metric-card">
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-dashboard-muted-bg text-dashboard-primary">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            </span>
-            <div>
-                <p class="text-2xl font-bold tabular-nums text-dashboard-text">{{ $stats['pending'] }}</p>
-                <p class="text-sm text-dashboard-muted">Čeka potvrdu</p>
-            </div>
-        </div>
-        <div class="dashboard-metric-card">
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-dashboard-muted-bg text-dashboard-primary">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 18h14M7 14h10l1-8H6l1 8zM9 6V4h6v2" /></svg>
-            </span>
-            <div>
-                <p class="text-2xl font-bold tabular-nums text-dashboard-text">{{ $stats['delivery'] }}</p>
-                <p class="text-sm text-dashboard-muted">U dostavi</p>
-            </div>
-        </div>
-        <div class="dashboard-metric-card">
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-dashboard-muted-bg text-dashboard-primary">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-            </span>
-            <div>
-                <p class="text-2xl font-bold tabular-nums text-dashboard-text">{{ $stats['pickup'] }}</p>
-                <p class="text-sm text-dashboard-muted">Lično preuzimanje</p>
-            </div>
-        </div>
-        <div class="dashboard-metric-card col-span-2 md:col-span-1">
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-dashboard-muted-bg text-dashboard-primary">
-                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            </span>
-            <div class="min-w-0">
-                <p class="truncate text-xl font-bold tabular-nums text-dashboard-text sm:text-2xl">{{ number_format($stats['revenue_today'], 0, ',', '.') }} din</p>
-                <p class="text-sm text-dashboard-muted">Prihod danas</p>
-            </div>
-        </div>
-    </div>
-
-    @if ($stats['pending'] > 0)
+    @if ($pendingCount > 0)
         <div class="flex flex-col gap-2 rounded-2xl border border-amber-200 bg-dashboard-warning-bg px-4 py-3 text-dashboard-warning-text sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <p class="text-base font-medium">
                 <span class="mr-1 inline-block size-2 rounded-full bg-orange-500 align-middle" aria-hidden="true"></span>
-                {{ $stats['pending'] }} {{ $stats['pending'] === 1 ? 'nova narudžbina čeka potvrdu' : 'nove narudžbine čekaju potvrdu' }}
+                {{ $pendingCount }} {{ $pendingCount === 1 ? 'nova narudžbina čeka potvrdu' : 'nove narudžbine čekaju potvrdu' }}
             </p>
             <p class="text-sm italic text-dashboard-warning-text/80">
                 Narudžbine starije od 5 minuta bez potvrde se automatski otkazuju
@@ -143,9 +72,12 @@
                             'dashboard-sidebar-link-active' => $statusFilter === $key,
                         ])
                     >
-                        <span>{{ $item['label'] }}</span>
+                        <span class="flex min-w-0 flex-1 items-center gap-3">
+                            <x-dashboard.sidebar-icon :icon="$item['icon']" />
+                            <span class="truncate">{{ $item['label'] }}</span>
+                        </span>
                         <span @class([
-                            'dashboard-sidebar-badge',
+                            'dashboard-sidebar-badge shrink-0',
                             'bg-white/20 text-white' => $statusFilter === $key,
                             'bg-dashboard-muted-bg text-dashboard-muted' => $statusFilter !== $key,
                         ])>
@@ -175,8 +107,9 @@
                     type="button"
                     wire:click="toggleAcceptingOrders"
                     @class([
-                        'dashboard-btn-warning w-full justify-center gap-2',
-                        'border-red-300 text-red-700 hover:bg-red-50' => ! $this->acceptingOrders(),
+                        'w-full justify-center gap-2',
+                        'dashboard-btn-danger' => $this->acceptingOrders(),
+                        'dashboard-btn-success' => ! $this->acceptingOrders(),
                     ])
                 >
                     <svg class="size-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -202,7 +135,13 @@
                 @empty
                     <div class="dashboard-card col-span-full px-6 py-16 text-center">
                         <p class="text-lg font-medium text-dashboard-text">Nema narudžbina</p>
-                        <p class="mt-2 text-base text-dashboard-muted">Za izabrani filter trenutno nema porudžbina.</p>
+                        <p class="mt-2 text-base text-dashboard-muted">
+                            @if ($statusFilter === 'new')
+                                Trenutno nema novih porudžbina koje čekaju obradu ili su u okviru ETA vremena.
+                            @else
+                                Za izabrani filter trenutno nema porudžbina.
+                            @endif
+                        </p>
                     </div>
                 @endforelse
             </div>

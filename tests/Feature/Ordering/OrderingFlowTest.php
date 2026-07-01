@@ -137,10 +137,13 @@ test('full delivery ordering flow through kitchen board', function (): void {
         'customer_name' => 'Ivana Ivić',
         'phone' => '0645566778',
         'fulfillment_type' => FulfillmentType::Delivery->value,
-        'address' => 'Batajnica, Ulica 12',
+        'address' => 'Ulica 12',
     ])->assertRedirect();
 
     $order = Order::query()->firstOrFail();
+
+    expect($order->delivery_area)->toBe('batajnica')
+        ->and($order->address)->toBe('Batajnica, Ulica 12');
 
     Livewire::actingAs($admin)
         ->test(OrderIndex::class)

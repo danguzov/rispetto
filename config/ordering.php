@@ -19,6 +19,19 @@ return [
 
     'eta_presets' => [15, 30, 45, 60, 90],
 
+    'delivery_area' => 'batajnica',
+
+    'delivery_areas' => [
+        'batajnica' => [
+            'label' => 'Batajnica',
+            'fee' => 250,
+        ],
+    ],
+
+    'delivery_free_above' => 3000,
+
+    'delivery_minimum_order_amount' => 700,
+
     'auto_status' => [
         'enabled' => env('ORDERING_AUTO_STATUS', true),
         'preparing_after_percent' => 15,

@@ -1,8 +1,17 @@
 @php
     use App\Enums\FulfillmentType;
     use App\Enums\OrderStatus;
+    use App\Support\DeliveryPricing;
 
     $defaultFulfillment = old('fulfillment_type');
+    $formattedDeliveryMinimum = number_format($deliveryMinimum, 0, ',', '.');
+    $formattedDeliveryFreeAbove = number_format($deliveryFreeAbove, 0, ',', '.');
+    $deliveryMinimumMet = $subtotal >= $deliveryMinimum;
+    $isDeliverySelected = $defaultFulfillment === FulfillmentType::Delivery->value;
+    $initialDeliveryFee = $isDeliverySelected
+        ? DeliveryPricing::fee($subtotal, FulfillmentType::Delivery)
+        : 0.0;
+    $initialOrderTotal = $subtotal + $initialDeliveryFee;
 
     if ($defaultFulfillment === null) {
         if ($deliveryEnabled && ! $pickupEnabled) {
@@ -45,6 +54,11 @@
                         action="{{ route('checkout.store') }}"
                         class="site-panel space-y-6 p-6 sm:p-8"
                         data-checkout-form
+                        data-delivery-minimum="{{ (int) $deliveryMinimum }}"
+                        data-delivery-free-above="{{ (int) $deliveryFreeAbove }}"
+                        data-delivery-area-key="{{ $deliveryAreaKey }}"
+                        data-delivery-area-fees='@json($deliveryAreaFees)'
+                        data-cart-subtotal="{{ (int) round($subtotal) }}"
                     >
                         @csrf
 
@@ -81,7 +95,8 @@
                                         >
                                         <span class="site-checkout-option__content">
                                             <span class="site-checkout-option__title">Dostava</span>
-                                            <span class="site-checkout-option__text">Dostavljamo na vašu adresu</span>
+                                            <span class="site-checkout-option__text">Dostava samo za Batajnicu</span>
+                                            <span class="site-checkout-option__text">Minimalna porudžbina – {{ $formattedDeliveryMinimum }} din</span>
                                         </span>
                                     </label>
                                 @endif
@@ -115,12 +130,54 @@
                             autocomplete="email"
                         />
 
-                        <div data-checkout-address @unless ($defaultFulfillment === FulfillmentType::Delivery->value) hidden @endunless>
+                        <div
+                            class="space-y-6"
+                            data-checkout-delivery-fields
+                            @unless ($defaultFulfillment === FulfillmentType::Delivery->value) hidden @endunless
+                        >
+                            <div
+                                class="site-checkout-delivery-notice"
+                                data-checkout-delivery-minimum
+                                role="status"
+                                @class([
+                                    'site-checkout-delivery-notice--warning' => $defaultFulfillment === FulfillmentType::Delivery->value && ! $deliveryMinimumMet,
+                                ])
+                            >
+                                <p class="site-checkout-delivery-notice__title">
+                                    Dostava je dostupna isključivo u {{ $deliveryAreaLabel }}
+                                </p>
+                                <p class="text-sm text-rispetto-muted">
+                                    Minimalna porudžbina: {{ $formattedDeliveryMinimum }} RSD
+                                </p>
+                                <p
+                                    class="site-checkout-delivery-notice__hint"
+                                    data-checkout-delivery-minimum-hint
+                                    @unless ($defaultFulfillment === FulfillmentType::Delivery->value && ! $deliveryMinimumMet) hidden @endunless
+                                >
+                                    Još {{ number_format($deliveryMinimum - $subtotal, 0, ',', '.') }} RSD do minimuma.
+                                </p>
+                                <p class="mt-2 text-sm text-rispetto-muted">
+                                    Besplatna dostava za porudžbine preko {{ $formattedDeliveryFreeAbove }} RSD.
+                                </p>
+                                <p
+                                    class="mt-2 text-sm font-medium text-rispetto-text"
+                                    data-checkout-delivery-fee-notice
+                                    @unless ($isDeliverySelected) hidden @endunless
+                                >
+                                    @if ($initialDeliveryFee > 0)
+                                        Cena dostave: {{ number_format($initialDeliveryFee, 0, ',', '.') }} RSD
+                                    @else
+                                        Dostava je besplatna za ovu porudžbinu.
+                                    @endif
+                                </p>
+                            </div>
+
                             <x-site.form-field
-                                label="Adresa za dostavu"
+                                label="Adresa u Batajnici"
                                 name="address"
                                 autocomplete="street-address"
-                                :required="$defaultFulfillment === FulfillmentType::Delivery->value"
+                                placeholder="Ulica i broj"
+                                :required="$isDeliverySelected"
                             />
                         </div>
 
@@ -136,7 +193,12 @@
                         </div>
 
                         <div class="flex flex-col gap-3 sm:flex-row">
-                            <button type="submit" class="site-btn-primary min-h-12 flex-1">
+                            <button
+                                type="submit"
+                                class="site-btn-primary min-h-12 flex-1"
+                                data-checkout-submit
+                                @if ($defaultFulfillment === FulfillmentType::Delivery->value && ! $deliveryMinimumMet) disabled @endif
+                            >
                                 Pošalji porudžbinu
                             </button>
                             <a href="{{ route('cart.show') }}" class="site-btn-secondary min-h-12 flex-1">
@@ -145,13 +207,17 @@
                         </div>
                     </form>
 
-                    <aside class="space-y-4">
+                    <aside class="space-y-4" data-checkout-summary>
                         <x-site.cart-summary
                             :items="$items"
                             :subtotal="$subtotal"
                             :item-count="$itemCount"
                             :interactive="false"
                             :show-checkout-cta="false"
+                            :show-order-total="true"
+                            :delivery-fee="$initialDeliveryFee"
+                            :order-total="$initialOrderTotal"
+                            :show-delivery-breakdown="$isDeliverySelected"
                         />
                     </aside>
                 </div>

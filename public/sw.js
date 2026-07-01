@@ -10,8 +10,8 @@ self.addEventListener('push', (event) => {
     const title = payload.title ?? 'Rispetto';
     const options = {
         body: payload.body ?? '',
-        icon: '/favicon.svg',
-        badge: '/favicon.svg',
+        icon: '/favicon-48.png',
+        badge: '/favicon-48.png',
         data: {
             url: payload.url ?? '/',
         },

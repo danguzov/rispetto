@@ -25,12 +25,8 @@
 <meta name="theme-color" content="{{ $seo['theme_color'] }}" />
 <link rel="canonical" href="{{ $seo['canonical'] }}" />
 
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-<link rel="manifest" href="/site.webmanifest">
+@include('partials.favicon')
+<link rel="manifest" href="{{ \App\Support\Favicon::url('site.webmanifest') }}">
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="{{ $seo['site_name'] }}" />

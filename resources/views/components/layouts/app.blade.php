@@ -7,6 +7,8 @@
 
     <title>{{ $title ?? 'Porudžbine' }} — Rispetto</title>
 
+    @include('partials.favicon')
+
     @include('partials.site-display-fonts')
 
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dashboard.js'])
@@ -34,13 +36,16 @@
                     @endif
 
                     <a href="{{ route('dashboard.orders.index') }}" class="shrink-0" wire:navigate>
-                        @if (file_exists(public_path(config('site.brand_logo', 'images/site/rispetto-logo.svg'))))
+                        @php
+                            $dashboardLogo = config('site.dashboard_logo', 'images/site/RISPETTO.svg');
+                        @endphp
+                        @if (file_exists(public_path($dashboardLogo)))
                             <img
-                                src="{{ asset(config('site.brand_logo', 'images/site/rispetto-logo.svg')) }}"
+                                src="{{ asset($dashboardLogo) }}"
                                 alt="Rispetto"
                                 class="h-8 w-auto sm:h-9"
-                                width="213"
-                                height="46"
+                                width="{{ config('site.dashboard_logo_width', 144) }}"
+                                height="{{ config('site.dashboard_logo_height', 24) }}"
                             />
                         @else
                             <span class="font-dashboard-display text-2xl font-bold tracking-wide text-dashboard-primary sm:text-3xl">
@@ -51,6 +56,8 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-4">
+                    <livewire:dashboard.header-revenue />
+
                     <a
                         href="{{ route('dashboard.orders.index', ['filter' => 'pending']) }}"
                         class="relative inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl text-dashboard-muted transition-colors hover:bg-dashboard-muted-bg hover:text-dashboard-text"
@@ -112,6 +119,10 @@
         'px-4 py-6 sm:px-6 lg:px-8' => auth()->check(),
         'flex min-h-screen items-center justify-center px-4 py-8' => ! auth()->check(),
     ])>
+        @auth
+            @include('livewire.dashboard.partials.kitchen-alarm')
+        @endauth
+
         {{ $slot }}
     </main>
 

@@ -22,7 +22,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $address
  * @property string|null $notes
  * @property PaymentMethod $payment_method
+ * @property string|null $delivery_area
  * @property string $subtotal
+ * @property string $delivery_fee
  * @property string $total
  * @property Carbon|null $estimated_ready_at
  * @property Carbon|null $accepted_at
@@ -39,9 +41,11 @@ use Illuminate\Support\Carbon;
     'phone',
     'email',
     'address',
+    'delivery_area',
     'notes',
     'payment_method',
     'subtotal',
+    'delivery_fee',
     'total',
     'estimated_ready_at',
     'accepted_at',
@@ -59,6 +63,7 @@ class Order extends Model
             'fulfillment_type' => FulfillmentType::class,
             'payment_method' => PaymentMethod::class,
             'subtotal' => 'decimal:2',
+            'delivery_fee' => 'decimal:2',
             'total' => 'decimal:2',
             'estimated_ready_at' => 'datetime',
             'accepted_at' => 'datetime',

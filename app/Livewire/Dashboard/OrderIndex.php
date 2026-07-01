@@ -27,7 +27,7 @@ class OrderIndex extends Component
     public string $search = '';
 
     #[Url(as: 'filter')]
-    public string $statusFilter = 'today';
+    public string $statusFilter = 'new';
 
     public bool $sidebarOpen = false;
 
@@ -74,6 +74,7 @@ class OrderIndex extends Component
     protected function ordersQuery(): Builder
     {
         return match ($this->statusFilter) {
+            'new' => OrderingMetrics::newOrdersQuery(),
             'pending' => OrderingMetrics::liveOrdersQuery()
                 ->where('status', OrderStatus::Pending),
             'preparing' => OrderingMetrics::liveOrdersQuery()
@@ -97,20 +98,6 @@ class OrderIndex extends Component
         };
     }
 
-    public function getStatsProperty(): array
-    {
-        return [
-            'today' => OrderingMetrics::ordersTodayCount(),
-            'pending' => OrderingMetrics::pendingCount(),
-            'delivery' => OrderingMetrics::deliveryActiveCount(),
-            'pickup' => OrderingMetrics::pickupActiveCount(),
-            'revenue_today' => OrderingMetrics::revenueToday(),
-        ];
-    }
-
-    /**
-     * @return array<string, int>
-     */
     public function getSidebarCountsProperty(): array
     {
         return OrderingMetrics::sidebarCounts();
@@ -119,6 +106,7 @@ class OrderIndex extends Component
     public function filterLabel(): string
     {
         return match ($this->statusFilter) {
+            'new' => 'Nove porudžbine',
             'pending' => 'Čeka potvrdu',
             'preparing' => 'U pripremi',
             'delivery' => 'U dostavi',
@@ -133,7 +121,6 @@ class OrderIndex extends Component
     {
         return view('livewire.dashboard.order-index', [
             'orders' => $this->orders,
-            'stats' => $this->stats,
             'sidebarCounts' => $this->sidebarCounts,
             'channelStatus' => OrderingMetrics::channelStatus(),
         ]);

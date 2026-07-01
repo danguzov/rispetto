@@ -57,7 +57,7 @@ it('includes favicon and manifest links in the document head', function (): void
 
     expect(HtmlAssertions::countMatches($html, '/<link rel="icon"/'))->toBeGreaterThanOrEqual(2);
     expect(HtmlAssertions::countMatches($html, '/<link rel="apple-touch-icon"/'))->toBe(1);
-    expect(HtmlAssertions::linkRel($html, 'manifest'))->toBe('/site.webmanifest');
+    expect(HtmlAssertions::linkRel($html, 'manifest'))->toContain('site.webmanifest');
 });
 
 it('renders sitemap xml with all configured public routes', function (): void {

@@ -5,10 +5,15 @@
     'acceptingOrders' => true,
     'interactive' => true,
     'showCheckoutCta' => true,
+    'showOrderTotal' => false,
+    'showDeliveryBreakdown' => false,
+    'deliveryFee' => 0,
+    'orderTotal' => null,
 ])
 
 @php
     /** @var list<array{key: string, menu_item_id: int, name: string, variant_label: string|null, unit_price: float, quantity: int}> $items */
+    $resolvedOrderTotal = $orderTotal ?? $subtotal;
 @endphp
 
 <div
@@ -98,14 +103,45 @@
         </div>
 
         <div class="site-panel space-y-6 p-6 sm:p-8" data-cart-footer>
-            <div class="flex flex-col gap-2 border-b border-rispetto-border pb-6 sm:flex-row sm:items-center sm:justify-between">
-                <p class="text-base text-rispetto-muted">
-                    Stavki u korpi: <span class="font-medium text-rispetto-text" @if ($interactive) data-cart-item-count @endif>{{ $itemCount }}</span>
-                </p>
-                <p class="text-xl font-medium text-rispetto-text">
-                    Ukupno:
-                    <span class="font-bold text-rispetto-accent" @if ($interactive) data-cart-subtotal @endif>{{ number_format($subtotal, 0, ',', '.') }} RSD</span>
-                </p>
+            <div class="space-y-3 border-b border-rispetto-border pb-6">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="text-base text-rispetto-muted">
+                        Stavki u korpi: <span class="font-medium text-rispetto-text" @if ($interactive) data-cart-item-count @endif>{{ $itemCount }}</span>
+                    </p>
+                    @unless ($showOrderTotal)
+                        <p class="text-xl font-medium text-rispetto-text">
+                            Ukupno:
+                            <span class="font-bold text-rispetto-accent" @if ($interactive) data-cart-subtotal @endif>{{ number_format($subtotal, 0, ',', '.') }} RSD</span>
+                        </p>
+                    @endunless
+                </div>
+
+                @if ($showOrderTotal)
+                    <div class="space-y-2 text-sm sm:text-base">
+                        <div class="flex items-center justify-between gap-4 text-rispetto-muted">
+                            <span>Jela</span>
+                            <span class="font-medium text-rispetto-text" data-checkout-summary-subtotal>{{ number_format($subtotal, 0, ',', '.') }} RSD</span>
+                        </div>
+                        <div
+                            class="flex items-center justify-between gap-4 text-rispetto-muted"
+                            data-checkout-summary-delivery-row
+                            @unless ($showDeliveryBreakdown) hidden @endunless
+                        >
+                            <span>Dostava</span>
+                            <span class="font-medium text-rispetto-text" data-checkout-summary-delivery>
+                                @if ($deliveryFee > 0)
+                                    {{ number_format($deliveryFee, 0, ',', '.') }} RSD
+                                @else
+                                    Besplatno
+                                @endif
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 border-t border-rispetto-border pt-3 text-lg font-medium text-rispetto-text">
+                            <span>Ukupno</span>
+                            <span class="font-bold text-rispetto-accent" data-checkout-summary-total>{{ number_format($resolvedOrderTotal, 0, ',', '.') }} RSD</span>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             @if ($showCheckoutCta || $interactive)

@@ -54,6 +54,9 @@ test('checkout page shows form when cart has items', function (): void {
         ->assertOk()
         ->assertSee('Završite porudžbinu')
         ->assertSee('Pošalji porudžbinu')
+        ->assertSee('Dostava je dostupna isključivo u Batajnica')
+        ->assertSee('Adresa u Batajnici')
+        ->assertSee('Besplatna dostava za porudžbine preko 3.000 RSD')
         ->assertSee('defer-checkout', false);
 });
 
@@ -108,19 +111,85 @@ test('checkout requires address for delivery', function (): void {
 });
 
 test('checkout creates delivery order with address', function (): void {
-    $item = createCheckoutMenuItem();
+    $item = createCheckoutMenuItem(['price' => 750]);
     $this->postJson(route('cart.add'), ['menu_item_id' => $item->id]);
 
     $this->post(route('checkout.store'), [
         'customer_name' => 'Ana Anić',
         'phone' => '0641112233',
         'fulfillment_type' => FulfillmentType::Delivery->value,
-        'address' => 'Batajnica, Ulica 1',
+        'address' => 'Ulica 1',
     ])->assertRedirect();
 
     expect(Order::query()->first())
         ->fulfillment_type->toBe(FulfillmentType::Delivery)
+        ->delivery_area->toBe('batajnica')
+        ->subtotal->toBe('750.00')
+        ->delivery_fee->toBe('250.00')
+        ->total->toBe('1000.00')
         ->address->toBe('Batajnica, Ulica 1');
+});
+
+test('checkout applies free delivery above threshold for batajnica', function (): void {
+    $item = createCheckoutMenuItem(['price' => 3200]);
+    $this->postJson(route('cart.add'), ['menu_item_id' => $item->id]);
+
+    $this->post(route('checkout.store'), [
+        'customer_name' => 'Ana Anić',
+        'phone' => '0641112233',
+        'fulfillment_type' => FulfillmentType::Delivery->value,
+        'address' => 'Ulica 1',
+    ])->assertRedirect();
+
+    expect(Order::query()->first())
+        ->delivery_fee->toBe('0.00')
+        ->total->toBe('3200.00');
+});
+
+test('checkout rejects delivery outside batajnica when area is tampered', function (): void {
+    $item = createCheckoutMenuItem(['price' => 1200]);
+    $this->postJson(route('cart.add'), ['menu_item_id' => $item->id]);
+
+    $this->from(route('checkout.show'))
+        ->post(route('checkout.store'), [
+            'customer_name' => 'Ana Anić',
+            'phone' => '0641112233',
+            'fulfillment_type' => FulfillmentType::Delivery->value,
+            'delivery_area' => 'busije',
+            'address' => 'Ulica 5',
+        ])
+        ->assertRedirect(route('checkout.show'))
+        ->assertSessionHasErrors(['fulfillment_type']);
+});
+
+test('checkout allows pickup below delivery minimum', function (): void {
+    $item = createCheckoutMenuItem(['price' => 350]);
+    $this->postJson(route('cart.add'), ['menu_item_id' => $item->id]);
+
+    $this->post(route('checkout.store'), [
+        'customer_name' => 'Marko Marković',
+        'phone' => '0631234567',
+        'fulfillment_type' => FulfillmentType::Pickup->value,
+    ])->assertRedirect();
+
+    expect(Order::query()->first())
+        ->fulfillment_type->toBe(FulfillmentType::Pickup)
+        ->total->toBe('350.00');
+});
+
+test('checkout rejects delivery below minimum amount', function (): void {
+    $item = createCheckoutMenuItem(['price' => 350]);
+    $this->postJson(route('cart.add'), ['menu_item_id' => $item->id]);
+
+    $this->from(route('checkout.show'))
+        ->post(route('checkout.store'), [
+            'customer_name' => 'Ana Anić',
+            'phone' => '0641112233',
+            'fulfillment_type' => FulfillmentType::Delivery->value,
+            'address' => 'Ulica 1',
+        ])
+        ->assertRedirect(route('checkout.show'))
+        ->assertSessionHasErrors(['cart']);
 });
 
 test('tracking page shows order details', function (): void {

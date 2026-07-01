@@ -42,7 +42,7 @@ class OrderShow extends Component
     protected function afterKitchenBroadcast(): void
     {
         $this->refreshOrder();
-        $this->dispatch('kitchen-new-order');
+        $this->dispatch('kitchen-new-order', pendingCount: $this->pendingCount);
     }
 
     public function updateStatusManually(): void

@@ -25,6 +25,39 @@ final class OrderingMetrics
             ->count();
     }
 
+    public static function newOrdersCount(): int
+    {
+        return self::newOrdersQuery()->count();
+    }
+
+    /**
+     * Aktivne porudžbine koje još nisu prošle ETA (ili čekaju potvrdu).
+     *
+     * @return Builder<Order>
+     */
+    public static function newOrdersQuery(): Builder
+    {
+        return Order::query()
+            ->with('items')
+            ->whereNotIn('status', [OrderStatus::Completed->value, OrderStatus::Cancelled->value])
+            ->where(function (Builder $query): void {
+                $query
+                    ->where('status', OrderStatus::Pending)
+                    ->orWhere(function (Builder $active): void {
+                        $active
+                            ->whereNotNull('estimated_ready_at')
+                            ->where('estimated_ready_at', '>=', now());
+                    })
+                    ->orWhere(function (Builder $active): void {
+                        $active
+                            ->where('status', '!=', OrderStatus::Pending)
+                            ->whereNull('estimated_ready_at');
+                    });
+            })
+            ->orderByRaw('CASE WHEN status = ? THEN 0 ELSE 1 END', [OrderStatus::Pending->value])
+            ->orderByDesc('created_at');
+    }
+
     public static function ordersTodayCount(): int
     {
         return Order::query()
@@ -84,6 +117,7 @@ final class OrderingMetrics
 
     /**
      * @return array{
+     *     new: int,
      *     today: int,
      *     pending: int,
      *     preparing: int,
@@ -96,6 +130,7 @@ final class OrderingMetrics
     public static function sidebarCounts(): array
     {
         return [
+            'new' => self::newOrdersCount(),
             'today' => self::ordersTodayCount(),
             'pending' => self::pendingCount(),
             'preparing' => self::preparingCount(),

@@ -36,7 +36,7 @@ trait ManagesKitchenOrders
     protected function afterKitchenBroadcast(): void
     {
         $this->syncKitchenState();
-        $this->dispatch('kitchen-new-order');
+        $this->dispatch('kitchen-new-order', pendingCount: $this->pendingCount);
     }
 
     public function acceptOrder(int $orderId, int $etaMinutes): void

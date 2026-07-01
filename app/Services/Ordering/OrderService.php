@@ -9,6 +9,7 @@ use App\Events\Ordering\OrderCreated;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderStatusLog;
+use App\Support\DeliveryPricing;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -26,6 +27,7 @@ class OrderService
      *     phone: string,
      *     email?: string|null,
      *     address?: string|null,
+     *     delivery_area?: string|null,
      *     notes?: string|null,
      *     fulfillment_type: FulfillmentType|string,
      * }  $checkoutData
@@ -44,13 +46,21 @@ class OrderService
             ? $checkoutData['fulfillment_type']
             : FulfillmentType::from((string) $checkoutData['fulfillment_type']);
 
+        $checkoutData = $this->normalizeCheckoutData($checkoutData, $fulfillmentType);
+
         $this->validateFulfillmentType($fulfillmentType);
         $this->validateCheckoutFields($checkoutData, $fulfillmentType);
 
         $subtotal = $this->cart->subtotal();
-        $this->validateMinimumOrderAmount($subtotal);
+        $this->validateMinimumOrderAmount($subtotal, $fulfillmentType);
 
-        return DB::transaction(function () use ($checkoutData, $fulfillmentType, $subtotal): Order {
+        $deliveryArea = $fulfillmentType === FulfillmentType::Delivery
+            ? DeliveryPricing::deliveryAreaKey()
+            : null;
+        $deliveryFee = DeliveryPricing::fee($subtotal, $fulfillmentType, $deliveryArea);
+        $total = DeliveryPricing::total($subtotal, $fulfillmentType, $deliveryArea);
+
+        return DB::transaction(function () use ($checkoutData, $fulfillmentType, $subtotal, $deliveryArea, $deliveryFee, $total): Order {
             $order = Order::query()->create([
                 'order_number' => $this->generateOrderNumber(),
                 'tracking_token' => (string) Str::uuid(),
@@ -59,11 +69,13 @@ class OrderService
                 'customer_name' => trim($checkoutData['customer_name']),
                 'phone' => trim($checkoutData['phone']),
                 'email' => filled($checkoutData['email'] ?? null) ? trim((string) $checkoutData['email']) : null,
-                'address' => filled($checkoutData['address'] ?? null) ? trim((string) $checkoutData['address']) : null,
+                'address' => $this->resolveOrderAddress($checkoutData, $fulfillmentType),
+                'delivery_area' => $deliveryArea !== '' ? $deliveryArea : null,
                 'notes' => filled($checkoutData['notes'] ?? null) ? trim((string) $checkoutData['notes']) : null,
                 'payment_method' => PaymentMethod::Cash,
                 'subtotal' => $subtotal,
-                'total' => $subtotal,
+                'delivery_fee' => $deliveryFee,
+                'total' => $total,
             ]);
 
             foreach ($this->cart->items() as $cartItem) {
@@ -139,6 +151,7 @@ class OrderService
      *     phone: string,
      *     email?: string|null,
      *     address?: string|null,
+     *     delivery_area?: string|null,
      *     notes?: string|null,
      *     fulfillment_type: FulfillmentType|string,
      * }  $checkoutData
@@ -156,7 +169,11 @@ class OrderService
         }
 
         if ($fulfillmentType === FulfillmentType::Delivery && ! filled($checkoutData['address'] ?? null)) {
-            $errors['address'] = 'Unesite adresu za dostavu.';
+            $errors['address'] = 'Unesite adresu za dostavu u Batajnici.';
+        }
+
+        if ($fulfillmentType === FulfillmentType::Delivery && ! DeliveryPricing::deliveryIsConfigured()) {
+            $errors['fulfillment_type'] = 'Dostava trenutno nije dostupna.';
         }
 
         if ($errors !== []) {
@@ -164,14 +181,77 @@ class OrderService
         }
     }
 
-    private function validateMinimumOrderAmount(float $subtotal): void
+    private function validateMinimumOrderAmount(float $subtotal, FulfillmentType $fulfillmentType): void
     {
-        $minimum = $this->settings->minOrderAmount();
+        if ($fulfillmentType !== FulfillmentType::Delivery) {
+            return;
+        }
 
-        if ($minimum !== null && $subtotal < $minimum) {
+        $minimum = (float) config('ordering.delivery_minimum_order_amount', 700);
+
+        if ($subtotal < $minimum) {
             throw ValidationException::withMessages([
-                'cart' => 'Minimalna porudžbina je '.number_format($minimum, 0, ',', '.').' RSD.',
+                'cart' => 'Minimalna porudžbina za dostavu je '.number_format($minimum, 0, ',', '.').' RSD.',
             ]);
         }
+    }
+
+    /**
+     * @param  array{
+     *     address?: string|null,
+     *     delivery_area?: string|null,
+     * }  $checkoutData
+     */
+    private function resolveOrderAddress(array $checkoutData, FulfillmentType $fulfillmentType): ?string
+    {
+        if ($fulfillmentType !== FulfillmentType::Delivery) {
+            return null;
+        }
+
+        $streetAddress = trim((string) ($checkoutData['address'] ?? ''));
+        $areaLabel = DeliveryPricing::deliveryAreaLabel();
+
+        return $streetAddress !== ''
+            ? "{$areaLabel}, {$streetAddress}"
+            : $areaLabel;
+    }
+
+    /**
+     * @param  array{
+     *     customer_name: string,
+     *     phone: string,
+     *     email?: string|null,
+     *     address?: string|null,
+     *     delivery_area?: string|null,
+     *     notes?: string|null,
+     *     fulfillment_type: FulfillmentType|string,
+     * }  $checkoutData
+     * @return array{
+     *     customer_name: string,
+     *     phone: string,
+     *     email?: string|null,
+     *     address?: string|null,
+     *     delivery_area?: string|null,
+     *     notes?: string|null,
+     *     fulfillment_type: FulfillmentType|string,
+     * }
+     */
+    private function normalizeCheckoutData(array $checkoutData, FulfillmentType $fulfillmentType): array
+    {
+        if ($fulfillmentType !== FulfillmentType::Delivery) {
+            return $checkoutData;
+        }
+
+        $requestedArea = (string) ($checkoutData['delivery_area'] ?? '');
+
+        if ($requestedArea !== '' && $requestedArea !== DeliveryPricing::deliveryAreaKey()) {
+            throw ValidationException::withMessages([
+                'fulfillment_type' => 'Dostava je dostupna samo u Batajnici.',
+            ]);
+        }
+
+        $checkoutData['delivery_area'] = DeliveryPricing::deliveryAreaKey();
+
+        return $checkoutData;
     }
 }

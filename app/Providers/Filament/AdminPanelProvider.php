@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Http\Controllers\Admin\QrCodeDownloadController;
+use App\Support\Favicon;
 use App\Support\RispettoQrCode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -30,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Rispetto')
-            ->favicon('/favicon.svg')
+            ->favicon(Favicon::url('favicon.ico'))
             ->colors([
                 'primary' => Color::Amber,
             ])

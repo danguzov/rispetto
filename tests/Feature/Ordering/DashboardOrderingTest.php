@@ -141,3 +141,37 @@ test('dashboard order index shows created order', function (): void {
         ->assertSee($order->customer_name)
         ->assertSee('Odbij');
 });
+
+test('new orders tab shows pending and in-eta orders only', function (): void {
+    $user = User::factory()->create();
+
+    $pending = createDashboardTestOrder(['customer_name' => 'Nova Pending']);
+    $inEta = createDashboardTestOrder([
+        'order_number' => 'R-'.now()->format('Ymd').'-0100',
+        'customer_name' => 'Nova U ETA',
+        'status' => OrderStatus::Accepted,
+        'estimated_ready_at' => now()->addMinutes(30),
+        'accepted_at' => now(),
+    ]);
+    $expiredEta = createDashboardTestOrder([
+        'order_number' => 'R-'.now()->format('Ymd').'-0101',
+        'customer_name' => 'Stara Posle ETA',
+        'status' => OrderStatus::Preparing,
+        'estimated_ready_at' => now()->subMinutes(5),
+        'accepted_at' => now()->subMinutes(40),
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(OrderIndex::class)
+        ->assertSet('statusFilter', 'new')
+        ->assertSee('Nova Pending')
+        ->assertSee('Nova U ETA')
+        ->assertDontSee('Stara Posle ETA');
+
+    Livewire::actingAs($user)
+        ->test(OrderIndex::class)
+        ->call('setStatusFilter', 'today')
+        ->assertSee('Nova Pending')
+        ->assertSee('Nova U ETA')
+        ->assertSee('Stara Posle ETA');
+});

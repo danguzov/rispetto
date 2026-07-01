@@ -94,6 +94,10 @@ return [
 
     'brand_logo' => 'images/site/rispetto-logo.svg',
 
+    'dashboard_logo' => 'images/site/RISPETTO.svg',
+    'dashboard_logo_width' => 144,
+    'dashboard_logo_height' => 24,
+
     'contact' => [
         'name' => 'Rispetto Ristorante',
         'email' => 'rispettoristorante@office.com',

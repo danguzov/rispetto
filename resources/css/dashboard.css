@@ -35,6 +35,10 @@
         @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border border-red-200 bg-white text-red-600 hover:bg-red-50;
     }
 
+    .dashboard-btn-success {
+        @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border border-dashboard-primary bg-white text-dashboard-primary hover:bg-dashboard-primary-soft;
+    }
+
     .dashboard-btn-ghost {
         @apply inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl px-5 py-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashboard-primary border border-dashboard-border bg-white text-dashboard-text hover:bg-dashboard-muted-bg;
     }

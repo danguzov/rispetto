@@ -121,6 +121,25 @@
                         @endforeach
                     </ul>
 
+                    @if ($order->fulfillment_type === \App\Enums\FulfillmentType::Delivery)
+                        <div class="space-y-2 border-t border-rispetto-border pt-4 text-sm">
+                            <div class="flex items-center justify-between gap-4 text-rispetto-muted">
+                                <span>Jela</span>
+                                <span class="font-medium text-rispetto-text">{{ number_format((float) $order->subtotal, 0, ',', '.') }} RSD</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-4 text-rispetto-muted">
+                                <span>Dostava</span>
+                                <span class="font-medium text-rispetto-text">
+                                    @if ((float) $order->delivery_fee > 0)
+                                        {{ number_format((float) $order->delivery_fee, 0, ',', '.') }} RSD
+                                    @else
+                                        Besplatno
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+
                     <p class="border-t border-rispetto-border pt-4 text-lg font-medium text-rispetto-text">
                         Ukupno:
                         <span class="text-rispetto-accent">{{ number_format((float) $order->total, 0, ',', '.') }} RSD</span>

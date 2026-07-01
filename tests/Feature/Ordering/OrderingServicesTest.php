@@ -178,9 +178,25 @@ test('order service requires address for delivery', function (): void {
     ]))->toThrow(ValidationException::class);
 });
 
-test('order service enforces minimum order amount', function (): void {
-    RestaurantSettings::query()->first()?->update(['min_order_amount' => 2000]);
-    app(RestaurantSettingsService::class)->clearCache();
+test('order service applies delivery fee for batajnica', function (): void {
+    $item = createMenuItem(['price' => 1500]);
+    app(CartService::class)->add($item, null, 1);
+
+    $order = app(OrderService::class)->createFromCheckout([
+        'customer_name' => 'Ana Anić',
+        'phone' => '0641112233',
+        'fulfillment_type' => FulfillmentType::Delivery,
+        'address' => 'Ulica 1',
+    ]);
+
+    expect($order->subtotal)->toBe('1500.00')
+        ->and($order->delivery_fee)->toBe('250.00')
+        ->and($order->total)->toBe('1750.00')
+        ->and($order->delivery_area)->toBe('batajnica');
+});
+
+test('order service enforces delivery minimum order amount', function (): void {
+    config(['ordering.delivery_minimum_order_amount' => 2000]);
 
     $item = createMenuItem(['price' => 890]);
     app(CartService::class)->add($item, null, 1);
@@ -188,8 +204,23 @@ test('order service enforces minimum order amount', function (): void {
     expect(fn () => app(OrderService::class)->createFromCheckout([
         'customer_name' => 'Ana Anić',
         'phone' => '0641112233',
-        'fulfillment_type' => FulfillmentType::Pickup,
+        'fulfillment_type' => FulfillmentType::Delivery,
+        'address' => 'Ulica 1',
     ]))->toThrow(ValidationException::class);
+
+    expect(fn () => app(OrderService::class)->createFromCheckout([
+        'customer_name' => 'Ana Anić',
+        'phone' => '0641112233',
+        'fulfillment_type' => FulfillmentType::Delivery,
+        'delivery_area' => 'busije',
+        'address' => 'Ulica 1',
+    ]))->toThrow(ValidationException::class);
+
+    expect(fn () => app(OrderService::class)->createFromCheckout([
+        'customer_name' => 'Ana Anić',
+        'phone' => '0641112233',
+        'fulfillment_type' => FulfillmentType::Pickup,
+    ]))->not->toThrow(ValidationException::class);
 });
 
 test('order service generates sequential order numbers per day', function (): void {
