@@ -50,7 +50,7 @@ class MenuItemsTable
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_active')
-                    ->label('Aktivno')
+                    ->label('Vidljivo')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->label('Kreirano')
@@ -70,7 +70,7 @@ class MenuItemsTable
                 TernaryFilter::make('featured')
                     ->label('Istaknuto'),
                 TernaryFilter::make('is_active')
-                    ->label('Aktivno'),
+                    ->label('Vidljivo'),
             ])
             ->recordActions([
                 EditAction::make(),

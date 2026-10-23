@@ -21,8 +21,8 @@ return [
 
         'pages' => [
             'home' => [
-                'title' => 'Početna',
-                'description' => 'Rispetto — autentična italijanska kuhinja u Batajnici. Istražite jelovnik, kartu pića i rezervišite sto za nezaboravno iskustvo.',
+                'title' => 'Restoran Rispetto u Batajnici',
+                'description' => 'Restoran Rispetto u Batajnici. Kuhinja, jelovnik, karta pića i dostava.',
             ],
             'menu' => [
                 'title' => 'Jelovnik',
@@ -101,9 +101,12 @@ return [
     'contact' => [
         'name' => 'Rispetto Ristorante',
         'email' => 'rispettoristorante@office.com',
-        'address' => 'Stevana Dubajića 5, Batajnica',
-        'maps_link' => 'https://maps.google.com/?q=Stevana+Dubajića+5,+Batajnica',
-        'maps_embed_url' => 'https://maps.google.com/maps?q=Stevana+Dubajića+5,+Batajnica,+Beograd&hl=sr&z=16&output=embed',
+        'address' => 'Katice Opačić 1A, Batajnica',
+        'street_address' => 'Katice Opačić 1A',
+        'locality' => 'Batajnica',
+        'region' => 'Beograd',
+        'maps_link' => 'https://maps.google.com/?q=44.9121499,20.2801970',
+        'maps_embed_url' => 'https://maps.google.com/maps?q=44.9121499,20.2801970&hl=sr&z=17&output=embed',
     ],
 
     'opening_hours' => [

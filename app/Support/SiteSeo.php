@@ -75,9 +75,9 @@ final class SiteSeo
             'email' => $contact['email'],
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => 'Stevana Dubajića 5',
-                'addressLocality' => 'Batajnica',
-                'addressRegion' => 'Beograd',
+                'streetAddress' => $contact['street_address'],
+                'addressLocality' => $contact['locality'],
+                'addressRegion' => $contact['region'],
                 'addressCountry' => 'RS',
             ],
             'servesCuisine' => ['Italian', 'Serbian'],

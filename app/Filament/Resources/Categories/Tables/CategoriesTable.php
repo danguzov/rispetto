@@ -6,8 +6,10 @@ use App\Enums\ProductType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CategoriesTable
@@ -34,6 +36,9 @@ class CategoriesTable
                     ->label('Redosled')
                     ->numeric()
                     ->sortable(),
+                IconColumn::make('is_active')
+                    ->label('Vidljivo')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->label('Kreirano')
                     ->dateTime()
@@ -49,6 +54,8 @@ class CategoriesTable
                 SelectFilter::make('type')
                     ->label('Tip')
                     ->options(ProductType::options()),
+                TernaryFilter::make('is_active')
+                    ->label('Vidljivo'),
             ])
             ->recordActions([
                 EditAction::make(),

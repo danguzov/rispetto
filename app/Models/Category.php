@@ -14,10 +14,11 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property ProductType $type
  * @property int $sort_order
+ * @property bool $is_active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'slug', 'type', 'sort_order'])]
+#[Fillable(['name', 'slug', 'type', 'sort_order', 'is_active'])]
 class Category extends Model
 {
     /**
@@ -28,6 +29,7 @@ class Category extends Model
         return [
             'type' => ProductType::class,
             'sort_order' => 'integer',
+            'is_active' => 'boolean',
         ];
     }
 

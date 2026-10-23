@@ -175,7 +175,9 @@ class CartService
 
     private function resolveActiveMenuItem(MenuItem $menuItem): MenuItem
     {
-        if (! $menuItem->is_active) {
+        $menuItem->loadMissing('category');
+
+        if (! $menuItem->is_active || ! ($menuItem->category?->is_active ?? false)) {
             throw ValidationException::withMessages([
                 'menu_item_id' => 'Jelo trenutno nije dostupno za poručivanje.',
             ]);

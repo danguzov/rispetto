@@ -52,6 +52,20 @@ it('exposes complete seo meta tags on all public pages', function (): void {
     }
 });
 
+it('shows the restaurant address and map on the homepage', function (): void {
+    $html = $this->get('/')->assertOk()->getContent();
+
+    expect($html)->toContain('Katice Opačić 1A, Batajnica');
+    expect($html)->toContain('maps.google.com/maps?q=44.9121499,20.2801970');
+    expect($html)->toContain('output=embed');
+    expect($html)->not->toContain('Stevana Dubajića');
+
+    $restaurant = collect(HtmlAssertions::jsonLd($html))->firstWhere('@type', 'Restaurant');
+
+    expect($restaurant['address']['streetAddress'])->toBe('Katice Opačić 1A');
+    expect($restaurant['address']['addressLocality'])->toBe('Batajnica');
+});
+
 it('includes favicon and manifest links in the document head', function (): void {
     $html = $this->get('/')->assertOk()->getContent();
 

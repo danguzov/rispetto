@@ -29,6 +29,10 @@ class SitePageCacheObserver
                 ProductType::Drink => SitePageCache::forgetDrinks(),
             };
 
+            if ($model->type === ProductType::Food) {
+                SitePageCache::forgetFeaturedMenu();
+            }
+
             return;
         }
 

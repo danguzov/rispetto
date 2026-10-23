@@ -85,8 +85,9 @@ class MenuItemForm
                     ->label('Istaknuto')
                     ->default(false),
                 Toggle::make('is_active')
-                    ->label('Aktivno')
-                    ->default(true),
+                    ->label('Vidljivo na sajtu')
+                    ->default(true)
+                    ->helperText('Isključeno sakriva samo ovo jelo. Skrivena kategorija sakriva jelo i kada je ovde uključeno.'),
                 Textarea::make('contents')
                     ->label('Šta sve ide')
                     ->rows(3)

@@ -34,6 +34,7 @@ final class SitePageCache
         return self::remember(self::MENU_KEY, function (): EloquentCollection {
             return Category::query()
                 ->where('type', ProductType::Food)
+                ->where('is_active', true)
                 ->with(['menuItems' => function ($query): void {
                     $query->where('is_active', true)
                         ->with('tags')
@@ -52,6 +53,7 @@ final class SitePageCache
         return self::remember(self::DRINKS_CATEGORIES_KEY, function (): EloquentCollection {
             return Category::query()
                 ->where('type', ProductType::Drink)
+                ->where('is_active', true)
                 ->with(['drinks' => function ($query): void {
                     $query->where('is_active', true)
                         ->with('tags')
@@ -86,6 +88,7 @@ final class SitePageCache
             return MenuItem::query()
                 ->where('is_active', true)
                 ->where('featured', true)
+                ->whereHas('category', fn ($query) => $query->where('is_active', true))
                 ->with('category')
                 ->orderBy('sort_order')
                 ->limit($limit)
